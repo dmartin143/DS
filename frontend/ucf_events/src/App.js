@@ -36,7 +36,7 @@ class App extends React.Component {
               <LoginBox goToHome={this.goToHome}/>
             </Route>
             <Route exact path='/UCFEvents/home'>
-              <HomeBox/>
+              <HomeBox priveledgeLevel={this.state.priveledgeLevel}/>
             </Route>
           </Switch>
         </Router>
