@@ -1,13 +1,13 @@
 import React from 'react'
 import {
   BrowserRouter as Router,
-  Switch,
+  Routes,
   Route
 } from 'react-router-dom';
 import logo from './logo.svg';
 import './App.css';
-import { HomeBox } from './Components/Home/HomeBox';
-import { LoginBox } from './Components/Login/LoginBox';
+import HomeBox from './Components/Home/HomeBox';
+import LoginBox from './Components/Login/LoginBox';
 
 class App extends React.Component {
   constructor(props) {
@@ -31,14 +31,16 @@ class App extends React.Component {
     return (
       <div className="App">
         <Router>
-          <Switch>
-            <Route exact path='/UCFEvents'>
-              <LoginBox goToHome={this.goToHome}/>
-            </Route>
-            <Route exact path='/UCFEvents/home'>
-              <HomeBox priveledgeLevel={this.state.priveledgeLevel}/>
-            </Route>
-          </Switch>
+          <Routes>
+            <Route
+            exact path='/'
+            element={<LoginBox goToHome={this.goToHome}/>}
+            /> 
+            <Route
+            exact path='/UCFEvents'
+            element={<HomeBox priveledgeLevel={this.state.priveledgeLevel}/>}
+            />
+          </Routes>
         </Router>
       </div>
     );
