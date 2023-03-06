@@ -33,7 +33,7 @@ class App extends React.Component {
         <Router>
           <Routes>
             <Route
-            exact path='/'
+            exact path=''
             element={<LoginBox goToHome={this.goToHome}/>}
             /> 
             <Route
