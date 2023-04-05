@@ -1,0 +1,7 @@
+{
+    "host": "localhost",
+    "user": "root",
+    "password": "TBD",
+    "database": "TBD",
+    "connectionLimit": 10
+}
