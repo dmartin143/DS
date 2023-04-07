@@ -1,23 +1,24 @@
 const mysql = require('mysql2');
 
+function isValidUser(pool, username, password) {
+    pool.getConnection((err, connection) => {
+        if (err) throw err;
+        
+    })
+}
+
 function initializeTables(pool) {
-    try {
-        createUsersTable(pool);
-        createAdminsTable(pool);
-        createSuperAdminsTable(pool);
-        createLocationsTable(pool);
-        createEventsTable(pool);
-        createCommentsTable(pool);
-        createRSOsTable(pool);
-        createRSOEventsTable(pool);
-        createPrivateEventsTable(pool);
-        createPublicEventsTable(pool);
-        createRSOMembersTable(pool);
-    }
-    catch (exception) {
-        console.log('Table initialization unsuccessful.');
-        return false;
-    }
+    createUsersTable(pool);
+    createAdminsTable(pool);
+    createSuperAdminsTable(pool);
+    createLocationsTable(pool);
+    createEventsTable(pool);
+    createCommentsTable(pool);
+    createRSOsTable(pool);
+    createRSOEventsTable(pool);
+    createPrivateEventsTable(pool);
+    createPublicEventsTable(pool);
+    createRSOMembersTable(pool);
 
     return true;
 }
