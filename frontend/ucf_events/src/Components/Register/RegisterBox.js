@@ -63,7 +63,7 @@ const RegisterBox = ({ handleRegister }) => {
           <form>
             <div className="register-box">
               <div className="register-page-form-col">
-                <div className="register-page-form-field">
+                
                   <label htmlFor="firstName">First Name</label>
                   <input
                     type="text"
@@ -73,8 +73,9 @@ const RegisterBox = ({ handleRegister }) => {
                     onChange={handleFirstNameChange}
                     required
                   />
-                </div>
-                <div className="register-page-form-field">
+                
+                <br />
+                
                   <label htmlFor="lastName">Last Name</label>
                   <input
                     type="text"
@@ -84,8 +85,9 @@ const RegisterBox = ({ handleRegister }) => {
                     onChange={handleLastNameChange}
                     required
                   />
-                </div>
-                <div className="register-page-form-field">
+                
+                <br />
+               
                   <label htmlFor="email">Email</label>
                     <input
                       type="email"
@@ -95,8 +97,9 @@ const RegisterBox = ({ handleRegister }) => {
                       onChange={handleEmailChange}
                       required
                     />
-                </div>
-                <div className="register-page-form-field">
+                
+                <br />
+                
                   <label htmlFor="username">Username</label>
                     <input
                       type="text"
@@ -106,9 +109,9 @@ const RegisterBox = ({ handleRegister }) => {
                       onChange={handleUsernameChange}
                       required
                     />
-                </div>
-              </div>
-                <div className="register-page-form-field">
+
+              <br />
+                
                   <label htmlFor="password">Password</label>
                   <input
                     type="password"
@@ -118,8 +121,9 @@ const RegisterBox = ({ handleRegister }) => {
                     onChange={handlePasswordChange}
                     required
                   />
-                </div>
-                <div className="register-page-form-field">
+                
+                <br />
+                
                   <label htmlFor="passwordConfirm">Confirm Password</label>
                   <input
                     type="password"
@@ -129,7 +133,21 @@ const RegisterBox = ({ handleRegister }) => {
                     onChange={handlePasswordConfirmChange}
                     required
                   />
-              </div>
+              
+              <br />
+              <div className="register-page-form-field">
+                <label htmlFor="userType">User Type:</label>
+                <select
+                  id="userType"
+                  name="userType"
+                  value={userType}
+                  onChange={handleUserTypeChange}
+                >
+                <option value="student">Student</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+          </div>
             <br />
               <button onClick={handleSubmit}>Submit</button>
             <br />
