@@ -8,6 +8,7 @@ import logo from './logo.svg';
 import './App.css';
 import HomeBox from './Components/Home/HomeBox';
 import LoginBox from './Components/Login/LoginBox';
+import RegisterBox from './Components/Register/RegisterBox';
 
 class App extends React.Component {
   constructor(props) {
@@ -32,14 +33,9 @@ class App extends React.Component {
       <div className="App">
         <Router>
           <Routes>
-            <Route
-            exact path=''
-            element={<LoginBox goToHome={this.goToHome}/>}
-            /> 
-            <Route
-            exact path='/UCFEvents'
-            element={<HomeBox priveledgeLevel={this.state.priveledgeLevel}/>}
-            />
+            <Route exact path='' element={<LoginBox goToHome={this.goToHome}/>} />
+            <Route exact path='/register' element={<RegisterBox />} />
+            <Route exact path='/UCFEvents' element={<HomeBox priveledgeLevel={this.state.priveledgeLevel}/>} />
           </Routes>
         </Router>
       </div>
