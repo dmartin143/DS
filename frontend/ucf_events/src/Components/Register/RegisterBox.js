@@ -12,6 +12,8 @@ const RegisterBox = ({ handleRegister }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [account1, setAccount1] = useState('');
+  const [account2, setAccount2] = useState('');
   const navigate = useNavigate();
 
   const handleFirstNameChange = (event) => {
@@ -43,8 +45,21 @@ const RegisterBox = ({ handleRegister }) => {
     setPasswordConfirm(event.target.value);
   };
 
+  const handleAccount1 = (event) => {
+    setAccount1(event.target.value);
+  };
+
+  const handleAccount2 = (event) => {
+    setAccount2(event.target.value);
+  };
+
   const handleSubmit = () => {
-    navigate("/UserType");
+    if (userType === "student") {
+      navigate ("/student-home");
+    }
+    else if(userType === "admin") {
+      navigate("/Admin-Home");
+    }
   };
 
   return (
@@ -135,7 +150,6 @@ const RegisterBox = ({ handleRegister }) => {
                   />
               
               <br />
-              <div className="register-page-form-field">
                 <label htmlFor="userType">User Type:</label>
                 <select
                   id="userType"
@@ -143,14 +157,35 @@ const RegisterBox = ({ handleRegister }) => {
                   value={userType}
                   onChange={handleUserTypeChange}
                 >
-                <option value="student">Student</option>
-                <option value="admin">Admin</option>
-              </select>
+                  <option value="student">Student</option>
+                  <option value="admin">Admin</option>
+                </select>
+                <br />
+                
+                <label htmlFor="googleAccount">Add a Google Account!</label>
+                <input
+                  type="account1"
+                  id="text"
+                  name="account1"
+                  value={account1}
+                  onChange={handleAccount1}
+                  required
+                />
+                <br />
+                
+                <label htmlFor="instaAccount">Add an Instagram Account!</label>
+                <input
+                  type="account2"
+                  id="text"
+                  name="account2"
+                  value={account2}
+                  onChange={handleAccount2}
+                  required
+                />
+                <br />
+                <button onClick={handleSubmit}>Submit</button>
+              <br />
             </div>
-          </div>
-            <br />
-              <button onClick={handleSubmit}>Submit</button>
-            <br />
           </div>
         </form>
       </div>

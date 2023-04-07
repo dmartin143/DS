@@ -9,6 +9,8 @@ import './App.css';
 import HomeBox from './Components/Home/HomeBox';
 import LoginBox from './Components/Login/LoginBox';
 import RegisterBox from './Components/Register/RegisterBox';
+import AdminBox from './Components/Admin-Home/AdminBox';
+import StudentBox from './Components/Student-Home/StudentBox';
 
 class App extends React.Component {
   constructor(props) {
@@ -34,8 +36,11 @@ class App extends React.Component {
         <Router>
           <Routes>
             <Route exact path='' element={<LoginBox goToHome={this.goToHome}/>} />
-            <Route exact path='/register' element={<RegisterBox />} />
-            <Route exact path='/UCFEvents' element={<HomeBox priveledgeLevel={this.state.priveledgeLevel}/>} />
+            <Route exact path='/Register' element={<RegisterBox />} />
+            <Route exact path='/Admin-Home' element={<AdminBox />} />
+            <Route exact path='/Student-Home' element={<StudentBox />} />
+            {/* <Route exact path='/UCFEvents' element={<HomeBox priveledgeLevel={this.state.priveledgeLevel}/>} /> */}
+            {/* <Route exact path='/' */}
           </Routes>
         </Router>
       </div>

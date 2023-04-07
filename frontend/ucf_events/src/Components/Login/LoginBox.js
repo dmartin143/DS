@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./loginbox.css"; // import the CSS file
-import ucfLogo from '../../Images/ucf_logo.PNG'
+import ucfLogo from '../../Images/ucf_logo.PNG';
+import {userType} from "../Register/RegisterBox";
+
+
 
 const LoginBox = () => {
   const [username, setUsername] = useState("");
@@ -17,8 +20,13 @@ const LoginBox = () => {
   };
 
   const handleLogin = () => {
-
-    navigate("/Home");
+    // if (userType === 'student'){
+    //   navigate("/Student-Home");
+    // }
+    // else if (userType === 'admin'){
+    //   navigate("/Admin-Home");
+    // }
+    navigate("/Student-Home");
   };
 
   const handleRegister = () => {
