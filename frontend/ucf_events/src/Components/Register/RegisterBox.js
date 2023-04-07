@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import "./registerbox.css";
 import { useNavigate } from "react-router-dom";
+// import {
+//   BrowserRouter as Router,
+//   Routes,
+//   Route
+// } from 'react-router-dom';
+// import AdminBox from "../Admin-Home";
+// import StudentBox from "../Student-Home";
 
 import ucfLogo from '../../Images/ucf_logo.PNG'
 
@@ -30,6 +37,12 @@ const RegisterBox = ({ handleRegister }) => {
 
   const handleUserTypeChange = (event) => {
     setUserType(event.target.value);
+    // if(userType === "student"){
+    //   <Route exact path='/Student-Home' element={<StudentBox />} />
+    // }
+    // else {
+    //   <Route exact path='/Admin-Home' element={<AdminBox />} />
+    // }
   };
 
   
@@ -55,7 +68,7 @@ const RegisterBox = ({ handleRegister }) => {
 
   const handleSubmit = () => {
     if (userType === "student") {
-      navigate ("/student-home");
+      navigate ("/Student-Home");
     }
     else if(userType === "admin") {
       navigate("/Admin-Home");

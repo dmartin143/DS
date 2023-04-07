@@ -1,15 +1,45 @@
-import React, { useState } from "react";
-import "./studentbox.css";
+import React from "react";
 import { useNavigate } from "react-router-dom";
+import "./studentbox.css";
 
+const StudentHome = () => {
+  const navigate = useNavigate();
 
+  const handleEventInfoClick = () => {
+    navigate("/event-info");
+  };
 
-const StudentBox = ({ handleStudent }) => {
+  const handleJoinRSOClick = () => {
+    navigate("/join-rso");
+  };
 
+  const handleFormGroupClick = () => {
+    navigate("/form-group");
+  };
+
+  const handleSeeProfile =() => {
+    navigate("/StudentProfile")
+  };
 
   return (
-    <h1>This is the student home page!</h1>
+    <div className="admin-home">
+      <div className="tabs">
+        <div className="tab" onClick={handleEventInfoClick}>
+          Event Information
+        </div>
+        <div className="tab" onClick={handleJoinRSOClick}>
+          Join an RSO
+        </div>
+        <div className="tab" onClick={handleFormGroupClick}>
+          Form a Group
+        </div>
+        <div className="tab" onClick={handleSeeProfile}>
+          See Your Profile
+        </div>
+      </div>
+      <h1>Welcome to the Student Home Page!</h1>
+    </div>
   );
 };
 
-export default StudentBox;
+export default StudentHome;
