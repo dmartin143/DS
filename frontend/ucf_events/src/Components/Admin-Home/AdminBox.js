@@ -18,7 +18,7 @@ const AdminHome = () => {
   };
 
   const handleSeeProfile = () => {
-    navigate("/AdminProfile");
+    navigate("/profile");
   };
 
   const handleSeeSuperAdminRoles = () => {

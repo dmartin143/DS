@@ -11,6 +11,10 @@ import LoginBox from './Components/Login/LoginBox';
 import RegisterBox from './Components/Register/RegisterBox';
 import AdminBox from './Components/Admin-Home/AdminBox';
 import StudentBox from './Components/Student-Home/StudentBox';
+import EventBox from './Components/Event-Description/EventBox';
+import JoinRSOBox from './Components/Join-RSO/JoinRSOBox';
+import FormGroupBox from './Components/Form-Group/FormGroupBox';
+import ProfileBox from './Components/Profile/ProfileBox';
 
 class App extends React.Component {
   constructor(props) {
@@ -37,8 +41,12 @@ class App extends React.Component {
           <Routes>
             <Route exact path='' element={<LoginBox goToHome={this.goToHome}/>} />
             <Route exact path='/Register' element={<RegisterBox />} />
-            <Route exact path='/Admin-Home' element={<AdminBox />} />
-            <Route exact path='/Student-Home' element={<StudentBox />} />
+            <Route exact path='/Admin' element={<AdminBox />} />
+            <Route exact path='/Student' element={<StudentBox />} />
+            <Route exact path='/event-info' element={<EventBox />} />
+            <Route exact path='/join-rso' element={<JoinRSOBox />} />
+            <Route exact path='/form-group' element={<FormGroupBox />} />
+            <Route exact path='/profile' element={<ProfileBox />} />
             {/* <Route exact path='/UCFEvents' element={<HomeBox priveledgeLevel={this.state.priveledgeLevel}/>} /> */}
             {/* <Route exact path='/' */}
           </Routes>

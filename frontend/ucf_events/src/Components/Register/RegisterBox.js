@@ -68,10 +68,10 @@ const RegisterBox = ({ handleRegister }) => {
 
   const handleSubmit = () => {
     if (userType === "student") {
-      navigate ("/Student-Home");
+      navigate ("/Student");
     }
     else if(userType === "admin") {
-      navigate("/Admin-Home");
+      navigate("/Admin");
     }
   };
 

@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./studentbox.css";
 
-const StudentHome = () => {
+const StudentBox = () => {
   const navigate = useNavigate();
 
   const handleEventInfoClick = () => {
@@ -18,7 +18,7 @@ const StudentHome = () => {
   };
 
   const handleSeeProfile =() => {
-    navigate("/StudentProfile")
+    navigate("/profile")
   };
 
   return (
@@ -42,4 +42,4 @@ const StudentHome = () => {
   );
 };
 
-export default StudentHome;
+export default StudentBox;
