@@ -17,6 +17,8 @@ import FormGroupBox from './Components/Form-Group/FormGroupBox';
 import ProfileBox from './Components/Profile/ProfileBox';
 import CreateRSOBox from './Components/Create-RSO/CreateRSOBox';
 import HostEventBox from './Components/Host-Event/HostEventBox';
+import SuperAdminToolsBox from './Components/Super-Admin-Tools/SuperAdminToolsBox';
+import UniversityBox from './Components/University/UniversityBox';
 
 class App extends React.Component {
   constructor(props) {
@@ -51,6 +53,8 @@ class App extends React.Component {
             <Route exact path='/profile' element={<ProfileBox />} />
             <Route exact path='/create-RSO' element={<CreateRSOBox />} />
             <Route exact path='/host-event' element={<HostEventBox />} />
+            <Route exact path='/super-admin' element={<SuperAdminToolsBox />} />
+            <Route exact path='/university-info' element={<UniversityBox />} />
           </Routes>
         </Router>
       </div>

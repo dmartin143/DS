@@ -5,6 +5,10 @@ import "./studentbox.css";
 const StudentBox = () => {
   const navigate = useNavigate();
 
+  const handleUniInfoClick = () => {
+    navigate("/university-info");
+  }
+
   const handleEventInfoClick = () => {
     navigate("/event-info");
   };
@@ -24,6 +28,9 @@ const StudentBox = () => {
   return (
     <div className="admin-home">
       <div className="tabs">
+      <div className="tab" onClick={handleUniInfoClick}>
+          University Information
+        </div>
         <div className="tab" onClick={handleEventInfoClick}>
           Event Information
         </div>
