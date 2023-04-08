@@ -15,6 +15,8 @@ import EventBox from './Components/Event-Description/EventBox';
 import JoinRSOBox from './Components/Join-RSO/JoinRSOBox';
 import FormGroupBox from './Components/Form-Group/FormGroupBox';
 import ProfileBox from './Components/Profile/ProfileBox';
+import CreateRSOBox from './Components/Create-RSO/CreateRSOBox';
+import HostEventBox from './Components/Host-Event/HostEventBox';
 
 class App extends React.Component {
   constructor(props) {
@@ -47,8 +49,8 @@ class App extends React.Component {
             <Route exact path='/join-rso' element={<JoinRSOBox />} />
             <Route exact path='/form-group' element={<FormGroupBox />} />
             <Route exact path='/profile' element={<ProfileBox />} />
-            {/* <Route exact path='/UCFEvents' element={<HomeBox priveledgeLevel={this.state.priveledgeLevel}/>} /> */}
-            {/* <Route exact path='/' */}
+            <Route exact path='/create-RSO' element={<CreateRSOBox />} />
+            <Route exact path='/host-event' element={<HostEventBox />} />
           </Routes>
         </Router>
       </div>
