@@ -1,2 +1,2 @@
-*.env
-configDB.json
+.env
+/configDB.json
