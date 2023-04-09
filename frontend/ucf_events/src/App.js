@@ -11,14 +11,16 @@ import LoginBox from './Components/Login/LoginBox';
 import RegisterBox from './Components/Register/RegisterBox';
 import AdminBox from './Components/Admin-Home/AdminBox';
 import StudentBox from './Components/Student-Home/StudentBox';
-import EventBox from './Components/Event-Description/EventBox';
+import EventAdminBox from './Components/Event-Description-Admin/EventAdminBox';
+import EventStudentBox from './Components/Event-Description-Student/EventStudentBox';
 import JoinRSOBox from './Components/Join-RSO/JoinRSOBox';
 import FormGroupBox from './Components/Form-Group/FormGroupBox';
-import ProfileBox from './Components/Profile/ProfileBox';
+// import ProfileBox from './Components/Profile/ProfileBox';
 import CreateRSOBox from './Components/Create-RSO/CreateRSOBox';
 import HostEventBox from './Components/Host-Event/HostEventBox';
 import SuperAdminToolsBox from './Components/Super-Admin-Tools/SuperAdminToolsBox';
-import UniversityBox from './Components/University/UniversityBox';
+import UniversityAdminBox from './Components/University-Admin/UniversityAdminBox';
+import UniversityStudentBox from './Components/University-Student/UniversityStudentBox';
 
 class App extends React.Component {
   constructor(props) {
@@ -47,14 +49,16 @@ class App extends React.Component {
             <Route exact path='/Register' element={<RegisterBox />} />
             <Route exact path='/Admin' element={<AdminBox />} />
             <Route exact path='/Student' element={<StudentBox />} />
-            <Route exact path='/event-info' element={<EventBox />} />
+            <Route exact path='/event-info-admin' element={<EventAdminBox />} />
+            <Route exact path='/event-info-student' element={<EventStudentBox />} />
             <Route exact path='/join-rso' element={<JoinRSOBox />} />
             <Route exact path='/form-group' element={<FormGroupBox />} />
-            <Route exact path='/profile' element={<ProfileBox />} />
+            {/* <Route exact path='/profile' element={<ProfileBox />} /> */}
             <Route exact path='/create-RSO' element={<CreateRSOBox />} />
             <Route exact path='/host-event' element={<HostEventBox />} />
             <Route exact path='/super-admin' element={<SuperAdminToolsBox />} />
-            <Route exact path='/university-info' element={<UniversityBox />} />
+            <Route exact path='/university-info-student' element={<UniversityStudentBox />} />
+            <Route exact path='/university-info-admin' element={<UniversityAdminBox />} />
           </Routes>
         </Router>
       </div>

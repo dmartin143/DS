@@ -9,6 +9,7 @@ import {userType} from "../Register/RegisterBox";
 const LoginBox = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleUsernameChange = (event) => {
@@ -19,14 +20,22 @@ const LoginBox = () => {
     setPassword(event.target.value);
   };
 
+  const handleError = (event) => {
+    setError(event.target.value);
+  }
+
   const handleLogin = () => {
-    // if (userType === 'student'){
-    //   navigate("/Student-Home");
-    // }
-    // else if (userType === 'admin'){
-    //   navigate("/Admin-Home");
-    // }
-    navigate("/Student-Home");
+    const userType = window.sessionStorage.getItem("userType");
+    if(userType === "student"){
+      navigate("/StudentBox");
+    }
+    else if (userType === "admin"){
+      navigate("/AdminBox");
+    }
+    else {
+      setError("Invalid Log In");
+    }
+
   };
 
   const handleRegister = () => {
@@ -63,6 +72,7 @@ const LoginBox = () => {
         />
         <br />
         <button onClick={handleLogin}>Submit</button>
+        {error &&<div>Error:{error}</div>}
         <br />
         <button onClick={handleRegister}>Register</button>
       </div>

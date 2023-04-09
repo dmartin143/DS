@@ -6,11 +6,11 @@ const StudentBox = () => {
   const navigate = useNavigate();
 
   const handleUniInfoClick = () => {
-    navigate("/university-info");
+    navigate("/university-info-student");
   }
 
   const handleEventInfoClick = () => {
-    navigate("/event-info");
+    navigate("/event-info-student");
   };
 
   const handleJoinRSOClick = () => {
@@ -22,11 +22,11 @@ const StudentBox = () => {
   };
 
   const handleSeeProfile =() => {
-    navigate("/profile")
+    navigate("/student")
   };
 
   return (
-    <div className="admin-home">
+    <div className="container">
       <div className="tabs">
       <div className="tab" onClick={handleUniInfoClick}>
           University Information

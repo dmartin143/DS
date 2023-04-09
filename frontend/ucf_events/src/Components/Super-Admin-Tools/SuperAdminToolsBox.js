@@ -6,11 +6,11 @@ const SuperAdminToolsBox = () => {
   const navigate = useNavigate();
 
   const handleUniInfoClick = () => {
-    navigate("/university-info");
+    navigate("/university-info-admin");
   };
 
   const handleEventInfoClick = () => {
-    navigate("/event-info");
+    navigate("/event-info-admin");
   };
 
   const handleCreateRSOClick = () => {
@@ -22,7 +22,7 @@ const SuperAdminToolsBox = () => {
   };
 
   const handleSeeProfile = () => {
-    navigate("/profile");
+    navigate("/admin");
   };
 
   const handleSeeSuperAdminRoles = () => {
@@ -43,7 +43,7 @@ const SuperAdminToolsBox = () => {
   };
 
   return (
-    <div className="admin-home">
+    <div className="container">
       <div className="tabs">
         <div className="tab" onClick={handleUniInfoClick}>
           University Information

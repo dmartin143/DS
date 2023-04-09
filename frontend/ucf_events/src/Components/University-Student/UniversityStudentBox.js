@@ -1,8 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "./joinRSObox.css";
+import "./universitystudentbox.css";
 
-const JoinRSOBox = () => {
+const UniversityStudentBox = () => {
   const navigate = useNavigate();
 
   const handleUniInfoClick = () => {
@@ -44,9 +44,9 @@ const JoinRSOBox = () => {
           See Your Profile
         </div>
       </div>
-      <h1>Welcome to the Join RSO Page!</h1>
+      <h1>Welcome to the University Home Page!</h1>
     </div>
   );
 };
 
-export default JoinRSOBox;
+export default UniversityStudentBox;

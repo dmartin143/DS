@@ -21,6 +21,7 @@ const RegisterBox = ({ handleRegister }) => {
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [account1, setAccount1] = useState('');
   const [account2, setAccount2] = useState('');
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleFirstNameChange = (event) => {
@@ -37,12 +38,6 @@ const RegisterBox = ({ handleRegister }) => {
 
   const handleUserTypeChange = (event) => {
     setUserType(event.target.value);
-    // if(userType === "student"){
-    //   <Route exact path='/Student-Home' element={<StudentBox />} />
-    // }
-    // else {
-    //   <Route exact path='/Admin-Home' element={<AdminBox />} />
-    // }
   };
 
   
@@ -66,13 +61,13 @@ const RegisterBox = ({ handleRegister }) => {
     setAccount2(event.target.value);
   };
 
-  const handleSubmit = () => {
-    if (userType === "student") {
-      navigate ("/Student");
-    }
-    else if(userType === "admin") {
-      navigate("/Admin");
-    }
+  const handleSubmit = (event) => {
+      if(userType === "student"){
+        window.location.href = "/Student";
+      }
+      else if (userType === "admin"){
+        window.location.href = "/Admin";
+      }
   };
 
   return (

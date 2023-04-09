@@ -1,13 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "./adminbox.css";
+import "./eventadminbox.css";
 
-const AdminHome = () => {
+const EventAdminBox = () => {
+ 
   const navigate = useNavigate();
 
   const handleUniInfoClick = () => {
     navigate("/university-info-admin");
-  }
+  };
 
   const handleEventInfoClick = () => {
     navigate("/event-info-admin");
@@ -29,12 +30,12 @@ const AdminHome = () => {
     // if the admin has more than 6 RSOs
     navigate("/super-admin");
     // if not then, print on the screen that they are not qualified yet
-  }
+  };
 
   return (
     <div className="container">
       <div className="tabs">
-      <div className="tab" onClick={handleUniInfoClick}>
+        <div className="tab" onClick={handleUniInfoClick}>
           University Information
         </div>
         <div className="tab" onClick={handleEventInfoClick}>
@@ -53,9 +54,13 @@ const AdminHome = () => {
           Super Admin Resources
         </div>
       </div>
-      <h1>Welcome to the Admin Home Page!</h1>
+      <h1>Welcome to the Event Info Page!</h1>
+
     </div>
+      
+      //show list of public events
+      //show list of RSO events
   );
 };
 
-export default AdminHome;
+export default EventAdminBox;

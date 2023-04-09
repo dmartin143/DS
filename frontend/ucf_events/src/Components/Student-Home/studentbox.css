@@ -1,13 +1,15 @@
 /* studenthome.css */
 
-/* .student-home {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f7f7f7;
-  } */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-image: url('../../Images/background.PNG');
+  background-size: cover;
+  background-position: center;
+}
   
   .tabs {
     display: flex;
