@@ -31,6 +31,11 @@ const AdminHome = () => {
     // if not then, print on the screen that they are not qualified yet
   }
 
+  const handleLogOut = () => {
+    window.sessionStorage.clear();
+    navigate("/");
+  };
+
   return (
     <div className="container">
       <div className="tabs">
@@ -51,6 +56,9 @@ const AdminHome = () => {
         </div>
         <div className="tab" onClick={handleSeeSuperAdminRoles}>
           Super Admin Resources
+        </div>
+        <div className="tab" onClick={handleLogOut}>
+          Log Out
         </div>
       </div>
       <h1>Welcome to the Admin Home Page!</h1>

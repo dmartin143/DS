@@ -25,6 +25,11 @@ const StudentBox = () => {
     navigate("/student")
   };
 
+  const handleLogOut = () => {
+    window.sessionStorage.clear();
+    navigate("/");
+  };
+
   return (
     <div className="container">
       <div className="tabs">
@@ -42,6 +47,9 @@ const StudentBox = () => {
         </div>
         <div className="tab" onClick={handleSeeProfile}>
           See Your Profile
+        </div>
+        <div className="tab" onClick={handleLogOut}>
+          Log Out
         </div>
       </div>
       <h1>Welcome to the Student Home Page!</h1>
