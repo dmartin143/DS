@@ -1,4 +1,4 @@
-const mysql = require('mysql2');
+import * as mysql2 from 'mysql2';
 
 function isValidUser(pool, username, password) {
     pool.getConnection((err, connection) => {
@@ -7,329 +7,333 @@ function isValidUser(pool, username, password) {
     })
 }
 
-function initializeTables(pool) {
-    createUsersTable(pool);
-    createAdminsTable(pool);
-    createSuperAdminsTable(pool);
-    createLocationsTable(pool);
-    createEventsTable(pool);
-    createCommentsTable(pool);
-    createRSOsTable(pool);
-    createRSOEventsTable(pool);
-    createPrivateEventsTable(pool);
-    createPublicEventsTable(pool);
-    createRSOMembersTable(pool);
+export async function initializeTables(pool) {
+    try {
+        await createUsersTable(pool);
+        await createAdminsTable(pool);
+        await createSuperAdminsTable(pool);
+        await createLocationsTable(pool);
+        await createEventsTable(pool);
+        await createCommentsTable(pool);
+        await createRSOsTable(pool);
+        await createRSOEventsTable(pool);
+        await createPrivateEventsTable(pool);
+        await createPublicEventsTable(pool);
+        await createRSOMembersTable(pool);
+    }
+    catch {
+        throw new error('Not all MySQL tables could be initialized.')
+    }
 
     return true;
 }
 
-function createUsersTable(pool) {
-    pool.getConnection((err, connection) => {
+async function createUsersTable(pool) {
+    await pool.getConnection( async (err, connection) => {
         if (err) throw err;
 
-        connection.query(
+        await new Promise( () => {connection.query(
             'CREATE TABLE IF NOT EXISTS Users(\
             userID INT,\
-            PRIMARY KEY (userID));', 
-            (err, res) => {
-                if (err) {
-                    connection.release();
-                    console.log('Issue creting Users table.');
-                    throw err;
-                }
-
+            PRIMARY KEY (userID));'
+            )
+        }).then( (res) => {
                 console.log(`Users table created -> ${res}`);
                 connection.release();
+        }).catch( (err) => {
+            connection.release();
+            console.log('Issue creting Users table.');
+            throw err;
         });
     });
 
     return true;
 }
 
-function createAdminsTable(pool) {
-    pool.getConnection((err, connection) => {
+async function createAdminsTable(pool) {
+    await pool.getConnection( async (err, connection) => {
         if (err) throw err;
 
-        connection.query(
+        await new Promise( () => {
+            connection.query(
             'CREATE TABLE IF NOT EXISTS Admins(\
             userID INT NOT NULL,\
             adminID INT,\
-            PRIMARY KEY (adminID)\
-                FOREIGN KEY (userID) REFERENCES Users\
+            PRIMARY KEY (adminID),\
+            FOREIGN KEY (userID) REFERENCES Users(userID)\
                 ON UPDATE CASCADE\
-                ON DELETE CASCADE);', 
-            (err, res) => {
-                if (err) {
-                    connection.release();
-                    console.log('Issue creting Admins table.');
-                    throw err;
-                }
-
-                console.log(`Admins table created -> ${res}`);
-                connection.release();
+                ON DELETE CASCADE);'
+            )
+        }).then( (res) => {
+            console.log(`Admins table created -> ${res}`);
+            connection.release();
+        }).catch( (err) => {
+            connection.release();
+            console.log('Issue creting Admins table.');
+            throw err;
         });
     });
 
     return true;
 }
 
-function createSuperAdminsTable(pool) {
-    pool.getConnection((err, connection) => {
+async function createSuperAdminsTable(pool) {
+    await pool.getConnection( async (err, connection) => {
         if (err) throw err;
 
-        connection.query(
+        await new Promise( () => {
+            connection.query(
             'CREATE TABLE IF NOT EXISTS SuperAdmins(\
             userID INT NOT NULL,\
             superAdminID INT,\
-            PRIMARY KEY (superAdminID)\
-                FOREIGN KEY (userID) REFERENCES Users\
+            PRIMARY KEY (superAdminID),\
+            FOREIGN KEY (userID) REFERENCES Users(userID)\
                 ON UPDATE CASCADE\
-                ON DELETE CASCADE);', 
-            (err, res) => {
-                if (err) {
-                    connection.release();
-                    console.log('Issue creting SuperAdmins table.');
-                    throw err;
-                }
-
-                console.log(`SuperAdmins table created -> ${res}`);
-                connection.release();
+                ON DELETE CASCADE);'
+            )
+        }).then( (res) => {
+            console.log(`SuperAdmins table created -> ${res}`);
+            connection.release();
+        }).catch( (err) => {
+            connection.release();
+            console.log('Issue creting SuperAdmins table.');
+            throw err;
         });
     });
 
     return true;
 }
 
-function createLocationsTable(pool) {
-    pool.getConnection((err, connection) => {
+async function createLocationsTable(pool) {
+    await pool.getConnection( async (err, connection) => {
         if (err) throw err;
 
-        connection.query(
+        await new Promise( () => {
+            connection.query(
             'CREATE TABLE IF NOT EXISTS Locations(\
             locationID INT AUTO_INCREMENT,\
             streetAddress VARCHAR(50) NOT NULL,\
             city VARCHAR(30) NOT NULL,\
             state VARCHAR(30) NOT NULL,\
-            latitude DECIMAAL(8,6)\
-            longitude DECIMAL(9,6)\
-            PRIMARY KEY (locationID));', 
-            (err, res) => {
-                if (err) {
-                    connection.release();
-                    console.log('Issue creting Locations table.');
-                    throw err;
-                }
-
-                console.log(`Locations table created -> ${res}`);
-                connection.release();
+            latitude DECIMAL(8,6),\
+            longitude DECIMAL(9,6),\
+            PRIMARY KEY (locationID));'
+            )
+        }).then( (res) => {
+            console.log(`Locations table created -> ${res}`);
+            connection.release();
+        }).catch( (err) => {
+            connection.release();
+            console.log('Issue creting Locations table.');
+            throw err;
         });
     });
 
     return true;
 }
 
-function createEventsTable(pool) {
-    pool.getConnection((err, connection) => {
+async function createEventsTable(pool) {
+    await pool.getConnection( async (err, connection) => {
         if (err) throw err;
 
-        connection.query(
+        await new Promise( () => {
+            connection.query(
             'CREATE TABLE IF NOT EXISTS Events(\
             eventID INT AUTO_INCREMENT,\
             time DATETIME,\
             description VARCHAR(500),\
             locationID INT NOT NULL,\
             PRIMARY KEY (eventID),\
-            FOREIGN KEY (locationID) REFERENCES Locations);', 
-            (err, res) => {
-                if (err) {
-                    connection.release();
-                    console.log('Issue creting Events table.');
-                    throw err;
-                }
-
-                console.log(`Events table created -> ${res}`);
-                connection.release();
+            FOREIGN KEY (locationID) REFERENCES Locations(locationID));'
+            )
+        }).then( (res) => {
+            console.log(`Events table created -> ${res}`);
+            connection.release();
+        }).catch( (err) => {
+            connection.release();
+            console.log('Issue creting Events table.');
+            throw err;
         });
     });
 
     return true;
 }
 
-function createCommentsTable(pool) {
-    pool.getConnection((err, connection) => {
+async function createCommentsTable(pool) {
+    await pool.getConnection( async (err, connection) => {
         if (err) throw err;
 
-        connection.query(
+        await new Promise( () => {
+            connection.query(
             'CREATE TABLE IF NOT EXISTS Comments(\
-            commentID INT AUTO INCREMENT,\
+            commentID INT AUTO_INCREMENT,\
             eventID INT NOT NULL,\
-            userID INT NOT NULL\
-            text VARCHAR(300),\
+            userID INT NOT NULL,\
+            utterance VARCHAR(300),\
             rating INT,\
-            timestamp DATETIME NOT NULL,\
+            creationDate DATETIME NOT NULL,\
             PRIMARY KEY (commentID),\
-            FOREIGN KEY (eventID) REFERENCES Events\
+            FOREIGN KEY (eventID) REFERENCES Events(eventID)\
                 ON UPDATE CASCADE\
                 ON DELETE CASCADE,\
-            FOREIGN KEY (userID) REFERENCES Users\
+            FOREIGN KEY (userID) REFERENCES Users(userID)\
                 ON UPDATE CASCADE\
-                ON DELETE CASCADE);', 
-            (err, res) => {
-                if (err) {
-                    connection.release();
-                    console.log('Issue creting Comments table.');
-                    throw err;
-                }
-
-                console.log(`Comments table created -> ${res}`);
-                connection.release();
+                ON DELETE CASCADE);'
+            )
+        }).then( (res) => {
+            console.log(`Comments table created -> ${res}`);
+            connection.release();
+        }).catch( (err) => {
+            connection.release();
+            console.log('Issue creting Comments table.');
+            throw err;
         });
     });
 
     return true;
 }
 
-function createRSOsTable(pool) {
-    pool.getConnection((err, connection) => {
+async function createRSOsTable(pool) {
+    await pool.getConnection( async (err, connection) => {
         if (err) throw err;
 
-        connection.query(
+        await new Promise( () => {
+            connection.query(
             'CREATE TABLE IF NOT EXISTS RSOs(\
-            RSOID INT AUTO INCREMENT,\
+            RSOID INT AUTO_INCREMENT,\
             adminID INT NOT NULL,\
             PRIMARY KEY (RSOID),\
-            FOREIGN KEY (adminID) REFERENCES Admins);', 
-            (err, res) => {
-                if (err) {
-                    connection.release();
-                    console.log('Issue creting RSOs table.');
-                    throw err;
-                }
-
-                console.log(`RSOs table created -> ${res}`);
-                connection.release();
+            FOREIGN KEY (adminID) REFERENCES Admins(adminID));'
+            )
+        }).then( (res) => {
+            console.log(`RSOs table created -> ${res}`);
+            connection.release();
+        }).catch( (err) => {
+            connection.release();
+            console.log('Issue creting RSOs table.');
+            throw err;
         });
     });
 
     return true;
 }
 
-function createRSOEventsTable(pool) {
-    pool.getConnection((err, connection) => {
+async function createRSOEventsTable(pool) {
+    await pool.getConnection( async (err, connection) => {
         if (err) throw err;
 
-        connection.query(
+        await new Promise( () => {
+            connection.query(
             'CREATE TABLE IF NOT EXISTS RSOEvents(\
             eventID INT,\
             RSOID INT NOT NULL,\
             PRIMARY KEY (eventID),\
-            FOREIGN KEY (RSOID) REFERENCES RSOs\
+            FOREIGN KEY (RSOID) REFERENCES RSOs(RSOID)\
                 ON UPDATE CASCADE\
                 ON DELETE CASCADE,\
-            FOREIGN KEY (eventID) REFERENCES Events\
+            FOREIGN KEY (eventID) REFERENCES Events(eventID)\
                 ON UPDATE CASCADE\
-                ON DELETE CASCADE);', 
-            (err, res) => {
-                if (err) {
-                    connection.release();
-                    console.log('Issue creting RSOEvents table.');
-                    throw err;
-                }
-
-                console.log(`RSOEvents table created -> ${res}`);
-                connection.release();
+                ON DELETE CASCADE);'
+            )
+        }).then( (res) => {
+            console.log(`RSOEvents table created -> ${res}`);
+            connection.release();
+        }).catch( (err) => {
+            connection.release();
+            console.log('Issue creting RSOEvents table.');
+            throw err;
         });
     });
 
     return true;
 }
 
-function createPrivateEventsTable(pool) {
-    pool.getConnection((err, connection) => {
+async function createPrivateEventsTable(pool) {
+    await pool.getConnection( async (err, connection) => {
         if (err) throw err;
 
-        connection.query(
+        await new Promise( () => {
+            connection.query(
             'CREATE TABLE IF NOT EXISTS PrivateEvents(\
             eventID INT,\
             adminID INT NOT NULL,\
             superAdminID INT,\
             isAllowed BOOLEAN,\
             PRIMARY KEY (eventID),\
-            FOREIGN KEY (eventID) REFERENCES Events\
+            FOREIGN KEY (eventID) REFERENCES Events(eventID)\
                 ON UPDATE CASCADE\
                 ON DELETE CASCADE,\
-            FOREIGN KEY (adminID) REFERENCES Admins,\
-            FOREIGN KEY (superAdminID) REFERENCES SuperAdmins);', 
-            (err, res) => {
-                if (err) {
-                    connection.release();
-                    console.log('Issue creting PrivateEvents table.');
-                    throw err;
-                }
-
-                console.log(`PrivateEvents table created -> ${res}`);
-                connection.release();
+            FOREIGN KEY (adminID) REFERENCES Admins(adminID),\
+            FOREIGN KEY (superAdminID) REFERENCES SuperAdmins(superAdminID));'
+            )
+        }).then( (res) => {
+            console.log(`PrivateEvents table created -> ${res}`);
+            connection.release();
+        }).catch( (err) => {
+            connection.release();
+            console.log('Issue creting PrivateEvents table.');
+            throw err;
         });
     });
 
     return true;
 }
 
-function createPublicEventsTable(pool) {
-    pool.getConnection((err, connection) => {
+async function createPublicEventsTable(pool) {
+    await pool.getConnection( async (err, connection) => {
         if (err) throw err;
 
-        connection.query(
+        await new Promise( () => {
+            connection.query(
             'CREATE TABLE IF NOT EXISTS PublicEvents(\
             eventID INT,\
             adminID INT NOT NULL,\
             superAdminID INT,\
             isAllowed BOOLEAN,\
             PRIMARY KEY (eventID),\
-            FOREIGN KEY (eventID) REFERENCES Events\
+            FOREIGN KEY (eventID) REFERENCES Events(eventID)\
                 ON UPDATE CASCADE\
                 ON DELETE CASCADE,\
-            FOREIGN KEY (adminID) REFERENCES Admins,\
-            FOREIGN KEY (superAdminID) REFERENCES SuperAdmins);', 
-            (err, res) => {
-                if (err) {
-                    connection.release();
-                    console.log('Issue creting PublicEvents table.');
-                    throw err;
-                }
-
-                console.log(`PublicEvents table created -> ${res}`);
-                connection.release();
+            FOREIGN KEY (adminID) REFERENCES Admins(adminID),\
+            FOREIGN KEY (superAdminID) REFERENCES SuperAdmins(superAdminID));'
+            )
+        }).then( (res) => {
+            console.log(`PublicEvents table created -> ${res}`);
+            connection.release();
+        }).catch( (err) => {
+            connection.release();
+            console.log('Issue creting PublicEvents table.');
+            throw err;
         });
     });
 
     return true;
 }
 
-function createRSOMembersTable(pool) {
-    pool.getConnection((err, connection) => {
+async function createRSOMembersTable(pool) {
+    await pool.getConnection( async (err, connection) => {
         if (err) throw err;
 
-        connection.query(
+        await new Promise( () => {
+            connection.query(
             'CREATE TABLE IF NOT EXISTS RSOMembers(\
             userID INT,\
             RSOID INT,\
-            PRIMARY KEY (userID, RSOID)\
-            FOREIGN KEY (userID) REFERENCES Users\
+            PRIMARY KEY (userID, RSOID),\
+            FOREIGN KEY (userID) REFERENCES Users(userID)\
                 ON UPDATE CASCADE\
                 ON DELETE CASCADE,\
-            FOREIGN KEY (RSOID) REFERENCES RSOs\
+            FOREIGN KEY (RSOID) REFERENCES RSOs(RSOID)\
                 ON UPDATE CASCADE\
-                ON DELETE CASCADE);', 
-            (err, res) => {
-                if (err) {
-                    connection.release();
-                    console.log('Issue creting RSOMembers table.');
-                    throw err;
-                }
-
-                console.log(`RSOMembers table created -> ${res}`);
-                connection.release();
+                ON DELETE CASCADE);'
+            )
+        }).then( (res) => {
+            console.log(`RSOMembers table created -> ${res}`);
+            connection.release();
+        }).catch( (err) => {
+            connection.release();
+            console.log('Issue creting RSOMembers table.');
+            throw err;
         });
     });
 

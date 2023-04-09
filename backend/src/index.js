@@ -1,16 +1,14 @@
 import {initializeTables} from './DBManager.js';
-const configDB = require('./configDB.json')
-const express = require('express');
-const mysql = require('mysql2');
+import configDB from './configDB.json' assert { type: 'json' };
+import express from 'express';
+import * as mysql from 'mysql2';
 
 const app = express();
 const port = 3000;
 
 const pool = mysql.createPool(configDB);
 
-let tablesCreated = initializeTables(pool);
-if (!tablesCreated)
-    throw new Error('Not all MySQL tables were properly created from the database manager.');
+await initializeTables(pool);
 
 app.get('/', (req, res) => {
     res.send('Test')
