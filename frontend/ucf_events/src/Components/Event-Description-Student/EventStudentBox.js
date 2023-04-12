@@ -57,27 +57,14 @@ const EventStudentBox = () => {
     },
   ];
 
+  const handleBackClick = () => {
+    window.history.back();
+  };
+
   const filteredEvents = events.filter((event) => event.type === eventType);
 
   return (
     <div className="container">
-      <div className="tabs">
-        <div className="tab" onClick={handleUniInfoClick}>
-          University Information
-        </div>
-        <div className="tab" onClick={handleEventInfoClick}>
-          Event Information
-        </div>
-        <div className="tab" onClick={handleJoinRSOClick}>
-          Join an RSO
-        </div>
-        <div className="tab" onClick={handleFormGroupClick}>
-          Form a Group
-        </div>
-        <div className="tab" onClick={handleSeeProfile}>
-          See Your Profile
-        </div>
-      </div>
       <div className="box">
       <h2>What type of event would you like to see?</h2>
       <select value={eventType} onChange={handleEventTypeChange}>
@@ -99,6 +86,7 @@ const EventStudentBox = () => {
         </div>
       ))}
     </div>
+    <button onClick={handleBackClick}>Back</button>
     </div>
   );
 };

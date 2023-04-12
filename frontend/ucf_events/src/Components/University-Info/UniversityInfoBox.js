@@ -33,24 +33,8 @@ const UniversityInfoBox = () => {
     },
   ];
 
-  const handleUniInfoClick = () => {
-    navigate("/university-info");
-  };
-
-  const handleEventInfoClick = () => {
-    navigate("/event-info-student");
-  };
-
-  const handleJoinRSOClick = () => {
-    navigate("/join-rso");
-  };
-
-  const handleFormGroupClick = () => {
-    navigate("/form-group");
-  };
-
-  const handleSeeProfile = () => {
-    navigate("/Student");
+  const handleBackClick = () => {
+    window.history.back();
   };
 
   const handleSelectChange = (event) => {
@@ -63,23 +47,6 @@ const UniversityInfoBox = () => {
 
   return (
     <div className="container">
-      <div className="tabs">
-        <div className="tab" onClick={handleUniInfoClick}>
-          University Information
-        </div>
-        <div className="tab" onClick={handleEventInfoClick}>
-          Event Information
-        </div>
-        <div className="tab" onClick={handleJoinRSOClick}>
-          Join an RSO
-        </div>
-        <div className="tab" onClick={handleFormGroupClick}>
-          Form a Group
-        </div>
-        <div className="tab" onClick={handleSeeProfile}>
-          See Your Profile
-        </div>
-      </div>
       <div>
         <div className="box">
         <h3>Select a university:</h3>
@@ -103,6 +70,7 @@ const UniversityInfoBox = () => {
         )}
       </div>
     </div>
+    <button onClick={handleBackClick}>Back</button>
     </div>
   );
 };

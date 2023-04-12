@@ -38,25 +38,12 @@ const JoinRSOBox = () => {
     // }
   };
 
+  const handleBackClick = () => {
+    window.history.back();
+  };
+  
   return (
     <div className="container">
-      <div className="tabs">
-        <div className="tab" onClick={handleUniInfoClick}>
-          University Information
-        </div>
-        <div className="tab" onClick={handleEventInfoClick}>
-          Event Information
-        </div>
-        <div className="tab" onClick={handleJoinRSOClick}>
-          Join an RSO
-        </div>
-        <div className="tab" onClick={handleFormGroupClick}>
-          Form a Group
-        </div>
-        <div className="tab" onClick={handleSeeProfile}>
-          See Your Profile
-        </div>
-      </div>
       <div className="box">
       <h1>Welcome to the Join RSO Page!</h1>
       <form onSubmit={handleSubmit}>
@@ -71,6 +58,7 @@ const JoinRSOBox = () => {
         <button type="submit">Join RSO</button>
       </form>
     </div>
+    <button onClick={handleBackClick}>Back</button>
     </div>
   );
 };

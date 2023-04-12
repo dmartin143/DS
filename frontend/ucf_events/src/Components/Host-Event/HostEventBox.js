@@ -7,7 +7,7 @@ const HostEventBox = () => {
   const navigate = useNavigate();
 
   const handleUniInfoClick = () => {
-    navigate("/university-info-admin");
+    navigate("/university-info");
   };
 
   const handleEventInfoClick = () => {

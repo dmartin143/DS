@@ -60,26 +60,11 @@ const FormGroupBox = () => {
     //     console.error("Error:", error);
     //   });
   };
-
+  const handleBackClick = () => {
+    window.history.back();
+  };
   return (
     <div className="container">
-      <div className="tabs">
-        <div className="tab" onClick={handleUniInfoClick}>
-          University Information
-        </div>
-        <div className="tab" onClick={handleEventInfoClick}>
-          Event Information
-        </div>
-        <div className="tab" onClick={handleJoinRSOClick}>
-          Join an RSO
-        </div>
-        <div className="tab" onClick={handleFormGroupClick}>
-          Form a Group
-        </div>
-        <div className="tab" onClick={handleSeeProfile}>
-          See Your Profile
-        </div>
-      </div>
       <div className = "box">
       <h1>Welcome to the Request to Create an RSO Page!</h1>
       <form onSubmit={handleSubmit}>
@@ -118,6 +103,7 @@ const FormGroupBox = () => {
         <button type="submit">Submit Request</button>
       </form>
     </div>
+    <button onClick={handleBackClick}>Back</button>
     </div>
   );
 };

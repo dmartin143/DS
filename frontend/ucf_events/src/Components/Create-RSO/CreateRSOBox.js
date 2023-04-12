@@ -7,7 +7,7 @@ const CreateRSOBox = () => {
   const navigate = useNavigate();
 
   const handleUniInfoClick = () => {
-    navigate("/university-info-admin");
+    navigate("/university-info");
   };
 
   const handleEventInfoClick = () => {
@@ -31,7 +31,6 @@ const CreateRSOBox = () => {
     navigate("/super-admin");
     // if not then, print on the screen that they are not qualified yet
   };
-
   return (
     <div className="container">
       <div className="tabs">
