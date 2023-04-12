@@ -6,7 +6,7 @@ const StudentBox = () => {
   const navigate = useNavigate();
 
   const handleUniInfoClick = () => {
-    navigate("/university-info-student");
+    navigate("/university-info");
   }
 
   const handleEventInfoClick = () => {
@@ -22,7 +22,7 @@ const StudentBox = () => {
   };
 
   const handleSeeProfile =() => {
-    navigate("/student")
+    navigate("/Student")
   };
 
   const handleLogOut = () => {

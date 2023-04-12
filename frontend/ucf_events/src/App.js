@@ -19,9 +19,9 @@ import FormGroupBox from './Components/Form-Group/FormGroupBox';
 import CreateRSOBox from './Components/Create-RSO/CreateRSOBox';
 import HostEventBox from './Components/Host-Event/HostEventBox';
 import SuperAdminToolsBox from './Components/Super-Admin-Tools/SuperAdminToolsBox';
-import UniversityAdminBox from './Components/University-Admin/UniversityAdminBox';
-import UniversityStudentBox from './Components/University-Student/UniversityStudentBox';
-
+// import UniversityAdminBox from './Components/University-Admin/UniversityAdminBox';
+import UniversityInfoBox from './Components/University-Info/UniversityInfoBox';
+import CreateUniversityBox from './Components/Create-University/CreateUniversityBox';
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -57,8 +57,10 @@ class App extends React.Component {
             <Route exact path='/create-RSO' element={<CreateRSOBox />} />
             <Route exact path='/host-event' element={<HostEventBox />} />
             <Route exact path='/super-admin' element={<SuperAdminToolsBox />} />
-            <Route exact path='/university-info-student' element={<UniversityStudentBox />} />
-            <Route exact path='/university-info-admin' element={<UniversityAdminBox />} />
+            <Route exact path='/university-info' element={<UniversityInfoBox />} />
+            {/* <Route exact path='/university-info-admin' element={<UniversityAdminBox />} /> */}
+            <Route exact path='/create-uni' element={<CreateUniversityBox />} />
+
           </Routes>
         </Router>
       </div>

@@ -55,7 +55,13 @@ const EventAdminBox = () => {
         </div>
       </div>
       <h1>Welcome to the Event Info Page!</h1>
-
+      {/* do a drop down of all public events */}
+      {/* do another drop down for RSO events if any */}
+      <h2>Name</h2>
+      <h2>Description</h2>
+      <h2>Location</h2>
+      <h2>Rating</h2>
+      <h2>Comments</h2>
     </div>
       
       //show list of public events
