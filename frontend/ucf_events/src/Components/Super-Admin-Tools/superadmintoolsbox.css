@@ -1,0 +1,45 @@
+.admin-home {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .selections {
+    display: flex;
+    margin-top: 50px;
+  }
+  
+  .selection {
+    margin: 0 50px;
+    padding: 20px;
+    background-color: #333;
+    color: #fff;
+    font-size: 24px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .selection:hover {
+    background-color: #666;
+  }
+  
+  .tabs {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 2rem;
+  }
+  
+  .tab {
+    padding: 1rem 2rem;
+    background-color: #eaeaea;
+    border-radius: 0.25rem 0.25rem 0 0;
+    margin-right: 0.25rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s ease-in-out;
+  }
+  
+  .tab:hover {
+    background-color: #d3d3d3;
+  }
+  

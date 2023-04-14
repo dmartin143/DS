@@ -1,71 +1,86 @@
-import React, { useState } from 'react';
-import './loginbox.css';
-import ucfLogo from '../../Images/ucf_logo.jpg'
-import PropTypes from 'prop-types'
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./loginbox.css"; // import the CSS file
+import ucfLogo from '../../Images/ucf_logo.PNG';
+import {userType} from "../Register/RegisterBox";
 
-// export class LoginBox extends React.Component {
-async function verifyUser(credentials){
-    return fetch('http://localhost:3000/login', {
-        method: 'POST', 
-        headers:{
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(credentials)
-    }).then(data => data.json())
-}
-export default function LoginBox({setToken}) {
-    // constructor(props) {
-    //     super (props);
-    //     this.state = {
-    //         userId: '',
-    //         userPass: ''
-    //     };
-    // }
 
-    const [userId, setUserId] = useState();
-    const [userPass, setUserPass] = useState();
-     
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const token = await verifyUser({
-            userId, userPass
-        });
-        setToken(token);
-        console.log(userId);
-        console.log(userPass);
+const LoginBox = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleUsernameChange = (event) => {
+    setUsername(event.target.value);
+  };
+
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
+
+  const handleError = (event) => {
+    setError(event.target.value);
+  }
+
+  const handleLogin = () => {
+    const userType = window.sessionStorage.getItem("userType");
+    if(userType === "student"){
+      navigate("/StudentBox");
+    }
+    else if (userType === "admin"){
+      navigate("/AdminBox");
+    }
+    else {
+      setError("Invalid Log In");
     }
 
-    // render() {
-        return (
-            <div className="container">
-                <div className="row">
-                    <h2 style={{textAlign:'center'}}>Welcome! Please Sign In: </h2>
-                    <div className="col">
-                        <img src={ucfLogo} alt="UCF Logo" className="logo"></img>
-                    </div>
-                    <div className="col" onSubmit={handleSubmit}>
-                        <input 
-                            type="userId" 
-                            value={userId} 
-                            onChange={(e) => setUserId({userId: e.target.value})} 
-                            placeholder="Username" 
-                        required/>
-                        <input 
-                            type="password" 
-                            value={userPass} 
-                            onChange={(e) => setUserPass({userPass: e.target.value})} 
-                            placeholder="Password" 
-                        required/>
-                        <button type="submit">Log In</button>
-                    </div>
-                </div>
-                <button>Create new account!</button>
-            </div>
-        );
-    // }
-}
-LoginBox.propTypes = {
-    setToken: PropTypes.func.isRequired
+  };
+
+  const handleRegister = () => {
+    navigate("/Register");
+  };
+
+  return (
+    <div class="container">
+  <div class="row">
+    <div class="column">
+      <div class="logo">
+        <img src={ucfLogo} alt="Logo" />
+      </div>
+    </div>
+    <div class="column">
+      <div class="login-box">
+        <h2>Login</h2>
+        <label htmlFor="username">Username:</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          value={username}
+          onChange={handleUsernameChange}
+        />
+        <br />
+        <label htmlFor="password">Password:</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          value={password}
+          onChange={handlePasswordChange}
+        />
+        <br />
+        <button onClick={handleLogin}>Submit</button>
+        {error &&<div>Error:{error}</div>}
+        <br />
+        <button onClick={handleRegister}>Register</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  );
 };
-// export default LoginBox;
+
+export default LoginBox;
