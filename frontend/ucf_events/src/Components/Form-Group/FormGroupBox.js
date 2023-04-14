@@ -9,26 +9,6 @@ const FormGroupBox = () => {
   const [newMember, setNewMember] = useState("");
   const [description, setDescription] = useState("");
 
-  const handleUniInfoClick = () => {
-    navigate("/university-info");
-  };
-
-  const handleEventInfoClick = () => {
-    navigate("/event-info-student");
-  };
-
-  const handleJoinRSOClick = () => {
-    navigate("/join-rso");
-  };
-
-  const handleFormGroupClick = () => {
-    navigate("/form-group");
-  };
-
-  const handleSeeProfile = () => {
-    navigate("/Student");
-  };
-
   const handleAddMember = (e) => {
     e.preventDefault();
     setMembers([...members, newMember]);
