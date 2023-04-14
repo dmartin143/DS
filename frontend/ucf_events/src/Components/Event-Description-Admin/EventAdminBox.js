@@ -1,71 +1,72 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./eventadminbox.css";
 
 const EventAdminBox = () => {
- 
   const navigate = useNavigate();
+  const [eventType, setEventType] = useState("public"); // initialize event type as "public"
 
-  const handleUniInfoClick = () => {
-    navigate("/university-info");
+  const handleEventTypeChange = (event) => {
+    setEventType(event.target.value);
   };
 
-  const handleEventInfoClick = () => {
-    navigate("/event-info-admin");
+  const events = [
+    {
+      name: "Event 1",
+      description: "Description of Event 1",
+      location: "Location 1",
+      rating: 4.5,
+      comments: ["Comment 1", "Comment 2"],
+      type: "public",
+    },
+    {
+      name: "Event 2",
+      description: "Description of Event 2",
+      location: "Location 2",
+      rating: 3.2,
+      comments: ["Comment 3"],
+      type: "private",
+    },
+    {
+      name: "Event 3",
+      description: "Description of Event 3",
+      location: "Location 3",
+      rating: 2.7,
+      comments: ["Comment 4", "Comment 5", "Comment 6"],
+      type: "rso",
+    },
+  ];
+
+  const handleBackClick = () => {
+    window.history.back();
   };
 
-  const handleCreateRSOClick = () => {
-    navigate("/create-RSO");
-  };
-
-  const handleHostEventClick = () => {
-    navigate("/host-event");
-  };
-
-  const handleSeeProfile = () => {
-    navigate("/admin");
-  };
-
-  const handleSeeSuperAdminRoles = () => {
-    // if the admin has more than 6 RSOs
-    navigate("/super-admin");
-    // if not then, print on the screen that they are not qualified yet
-  };
+  const filteredEvents = events.filter((event) => event.type === eventType);
 
   return (
     <div className="container">
-      <div className="tabs">
-        <div className="tab" onClick={handleUniInfoClick}>
-          University Information
+      <div className="box">
+      <h2>What type of event would you like to see?</h2>
+      <select value={eventType} onChange={handleEventTypeChange}>
+        <option value="public">Public Events</option>
+        <option value="rso">RSO Events</option>
+      </select>
+      {filteredEvents.map((event) => (
+        <div key={event.name}>
+          <h2>{event.name}</h2>
+          <p>{event.description}</p>
+          <p>{event.location}</p>
+          <p>{event.rating}</p>
+          <ul>
+            {event.comments.map((comment, index) => (
+              <li key={index}>{comment}</li>
+            ))}
+          </ul>
         </div>
-        <div className="tab" onClick={handleEventInfoClick}>
-          Event Information
-        </div>
-        <div className="tab" onClick={handleCreateRSOClick}>
-          Create an RSO
-        </div>
-        <div className="tab" onClick={handleHostEventClick}>
-          Host Event
-        </div>
-        <div className="tab" onClick={handleSeeProfile}>
-          See Your Profile
-        </div>
-        <div className="tab" onClick={handleSeeSuperAdminRoles}>
-          Super Admin Resources
-        </div>
-      </div>
-      <h1>Welcome to the Event Info Page!</h1>
-      {/* do a drop down of all public events */}
-      {/* do another drop down for RSO events if any */}
-      <h2>Name</h2>
-      <h2>Description</h2>
-      <h2>Location</h2>
-      <h2>Rating</h2>
-      <h2>Comments</h2>
+      ))}
     </div>
-      
-      //show list of public events
-      //show list of RSO events
+    <button onClick={handleBackClick}>Back</button>
+    </div>
   );
 };
 

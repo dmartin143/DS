@@ -22,6 +22,7 @@ import SuperAdminToolsBox from './Components/Super-Admin-Tools/SuperAdminToolsBo
 // import UniversityAdminBox from './Components/University-Admin/UniversityAdminBox';
 import UniversityInfoBox from './Components/University-Info/UniversityInfoBox';
 import CreateUniversityBox from './Components/Create-University/CreateUniversityBox';
+import EventStatusBox from './Components/Event-Status/EventStatusBox';
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -60,6 +61,7 @@ class App extends React.Component {
             <Route exact path='/university-info' element={<UniversityInfoBox />} />
             {/* <Route exact path='/university-info-admin' element={<UniversityAdminBox />} /> */}
             <Route exact path='/create-uni' element={<CreateUniversityBox />} />
+            <Route exact path='/event-status' element={<EventStatusBox />} />
 
           </Routes>
         </Router>

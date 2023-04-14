@@ -66,7 +66,7 @@ const FormGroupBox = () => {
   return (
     <div className="container">
       <div className = "box">
-      <h1>Welcome to the Request to Create an RSO Page!</h1>
+      <h1>Welcome to the Form Group Page!</h1>
       <form onSubmit={handleSubmit}>
         <label>
           Group Name:
@@ -100,7 +100,7 @@ const FormGroupBox = () => {
           />
         </label>
         <br />
-        <button type="submit">Submit Request</button>
+        <button type="submit">Submit</button>
       </form>
     </div>
     <button onClick={handleBackClick}>Back</button>

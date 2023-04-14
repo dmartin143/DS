@@ -60,88 +60,81 @@ const CreateUniversityBox = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
   };
-
+  const handleBackClick = () => {
+    window.history.back();
+  };
   return (
-    <div>
-    <div className="tabs">
-      <div className="tab" onClick={handleUniInfoClick}>
-          University Information
-        </div>
-        <div className="tab" onClick={handleEventInfoClick}>
-          Event Information
-        </div>
-        <div className="tab" onClick={handleJoinRSOClick}>
-          Join an RSO
-        </div>
-        <div className="tab" onClick={handleFormGroupClick}>
-          Form a Group
-        </div>
-        <div className="tab" onClick={handleSeeProfile}>
-          See Your Profile
-        </div>
+<div className="container">
+  <div className="box">
+    <h1>Create University Profile</h1>
+    <form onSubmit={handleSubmit}>
+      <div className="input-group">
+        <label htmlFor="description">Description:</label>
+        <input
+          type="text"
+          id="description"
+          value={description}
+          onChange={handleDescriptionChange}
+        />
       </div>
-    <div className="container">
-      <label htmlFor="description">Description:</label>
-      <input
-        type="text"
-        id="description"
-        value={description}
-        onChange={handleDescriptionChange}
-      />
 
-      <label htmlFor="numOfStudents">Number of Students:</label>
-      <input
-        type="number"
-        id="numOfStudents"
-        value={numOfStudents}
-        onChange={handleNumOfStudentsChange}
-      />
+      <div className="input-group">
+        <label htmlFor="numOfStudents">Number of Students:</label>
+        <input
+          type="number"
+          id="numOfStudents"
+          value={numOfStudents}
+          onChange={handleNumOfStudentsChange}
+        />
+      </div>
 
-      <label htmlFor="profileID">Profile ID:</label>
-      <input
-        type="text"
-        id="profileID"
-        value={profileID}
-        onChange={handleProfileIDChange}
-      />
+      <div className="input-group">
+        <label htmlFor="profileID">Profile ID:</label>
+        <input
+          type="text"
+          id="profileID"
+          value={profileID}
+          onChange={handleProfileIDChange}
+        />
+      </div>
 
-      <label htmlFor="name">Name:</label>
-      <input
-        type="text"
-        id="name"
-        value={name}
-        onChange={handleNameChange}
-      />
+      <div className="input-group">
+        <label htmlFor="name">Name:</label>
+        <input
+          type="text"
+          id="name"
+          value={name}
+          onChange={handleNameChange}
+        />
+      </div>
 
-      <label htmlFor="location">Location:</label>
-      <input
-        type="text"
-        id="location"
-        value={location}
-        onChange={handleLocationChange}
-      />
+      <div className="input-group">
+        <label htmlFor="location">Location:</label>
+        <input
+          type="text"
+          id="location"
+          value={location}
+          onChange={handleLocationChange}
+        />
+      </div>
 
-      <label htmlFor="pictures">Pictures:</label>
-      <input
-        type="file"
-        id="pictures"
-        value={pictures}
-        onChange={handlePicturesChange}
-        multiple
-      />
+      <div className="input-group">
+        <label htmlFor="pictures">Pictures:</label>
+        <input
+          type="file"
+          id="pictures"
+          value={pictures}
+          onChange={handlePicturesChange}
+          multiple
+        />
+      </div>
 
       <button type="submit">Submit</button>
+    </form>
+  </div>
+  <button onClick={handleBackClick}>Back</button>
+</div>
 
-      {/* <UniversityStudentBox
-        description={description}
-        numOfStudents={numOfStudents}
-        profileID={profileID}
-        name={name}
-        location={location}
-        pictures={pictures}
-      /> */}
-    </div>
-    </div>
   );
 };
 

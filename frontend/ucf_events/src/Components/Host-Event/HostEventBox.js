@@ -1,66 +1,155 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./hosteventbox.css";
+import EventStatusBox from '../Event-Status/EventStatusBox'
 
 const HostEventBox = () => {
- 
   const navigate = useNavigate();
+  const [events, setEvents] = useState([]);
+  const [name, setName] = useState("");
+  const [category, setCategory] = useState("");
+  const [description, setDescription] = useState("");
+  const [time, setTime] = useState("");
+  const [date, setDate] = useState("");
+  const [location, setLocation] = useState("");
+  const [latitude, setLatitude] = useState("");
+  const [longitude, setLongitude] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
 
-  const handleUniInfoClick = () => {
-    navigate("/university-info");
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // Here you can use the values of the state variables to create the event
+    // You can send this data to the server or save it locally
+    const newEvent = {
+      name,
+      category,
+      description,
+      time,
+      date,
+      location,
+      latitude,
+      longitude,
+      phone,
+      email,
+      status: "pending", // Add a status field to the event object with a default value of "pending"
+    };
+    // After submitting the form, you can clear the inputs
+    setEvents([...events, newEvent]);
+    setName("");
+    setCategory("");
+    setDescription("");
+    setTime("");
+    setDate("");
+    setLocation("");
+    setLatitude("");
+    setLongitude("");
+    setPhone("");
+    setEmail("");
   };
-
-  const handleEventInfoClick = () => {
-    navigate("/event-info-admin");
+  const handleBackClick = () => {
+    window.history.back();
   };
-
-  const handleCreateRSOClick = () => {
-    navigate("/create-RSO");
-  };
-
-  const handleHostEventClick = () => {
-    navigate("/host-event");
-  };
-
-  const handleSeeProfile = () => {
-    navigate("/admin");
-  };
-
-  const handleSeeSuperAdminRoles = () => {
-    // if the admin has more than 6 RSOs
-    navigate("/super-admin");
-    // if not then, print on the screen that they are not qualified yet
-  };
-
   return (
     <div className="container">
-      <div className="tabs">
-        <div className="tab" onClick={handleUniInfoClick}>
-          University Information
-        </div>
-        <div className="tab" onClick={handleEventInfoClick}>
-          Event Information
-        </div>
-        <div className="tab" onClick={handleCreateRSOClick}>
-          Create an RSO
-        </div>
-        <div className="tab" onClick={handleHostEventClick}>
-          Host Event
-        </div>
-        <div className="tab" onClick={handleSeeProfile}>
-          See Your Profile
-        </div>
-        <div className="tab" onClick={handleSeeSuperAdminRoles}>
-          Super Admin Resources
-        </div>
-      </div>
+      <div className = "box">
       <h1>Welcome to the Host Event Page!</h1>
-
-    </div>
-      
-      //show list of public events
-      //show list of RSO events
-  );
-};
-
-export default HostEventBox;
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label htmlFor="name">Name:</label>
+          <input
+            type="text"
+            id="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="category">Category:</label>
+          <input
+            type="text"
+            id="category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="description">Description:</label>
+          <textarea
+            id="description"
+            value={description}
+            onChange={(e) =>setDescription(e.target.value)}
+            />
+            </div>
+            <div>
+            <label htmlFor="time">Time:</label>
+            <input
+            type="time"
+            id="time"
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
+            />
+            </div>
+            <div>
+            <label htmlFor="date">Date:</label>
+            <input
+            type="date"
+            id="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            />
+            </div>
+            <div>
+            <label htmlFor="location">Location:</label>
+            <input
+            type="text"
+            id="location"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
+            />
+            </div>
+            <div>
+            <label htmlFor="latitude">Latitude:</label>
+            <input
+            type="text"
+            id="latitude"
+            value={latitude}
+            onChange={(e) => setLatitude(e.target.value)}
+            />
+            </div>
+            <div>
+            <label htmlFor="longitude">Longitude:</label>
+            <input
+            type="text"
+            id="longitude"
+            value={longitude}
+            onChange={(e) => setLongitude(e.target.value)}
+            />
+            </div>
+            <div>
+            <label htmlFor="phone">Contact Phone:</label>
+            <input
+            type="tel"
+            id="phone"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            />
+            </div>
+            <div>
+            <label htmlFor="email">Contact Email:</label>
+            <input
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            />
+            </div>
+            <button type="submit">Submit</button>
+            </form>
+            </div>
+            <button onClick={handleBackClick}>Back</button>
+            </div>
+            );
+            };
+            
+            export default HostEventBox;

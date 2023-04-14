@@ -1,64 +1,67 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./createRSObox.css";
 
 const CreateRSOBox = () => {
- 
   const navigate = useNavigate();
 
-  const handleUniInfoClick = () => {
-    navigate("/university-info");
+  // Define state for RSO inputs
+  const [rsoID, setRSOID] = useState("");
+  const [rsoName, setRSOName] = useState("");
+  const [rsoDescription, setRSODescription] = useState("");
+
+  const handleBackClick = () => {
+    window.history.back();
   };
 
-  const handleEventInfoClick = () => {
-    navigate("/event-info-admin");
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+    // Code to create new RSO using rsoID, rsoName, and rsoDescription
+    console.log(`Creating new RSO: ${rsoID}, ${rsoName}, ${rsoDescription}`);
+    // Clear inputs after submit
+    setRSOID("");
+    setRSOName("");
+    setRSODescription("");
   };
 
-  const handleCreateRSOClick = () => {
-    navigate("/create-RSO");
-  };
-
-  const handleHostEventClick = () => {
-    navigate("/host-event");
-  };
-
-  const handleSeeProfile = () => {
-    navigate("/admin");
-  };
-
-  const handleSeeSuperAdminRoles = () => {
-    // if the admin has more than 6 RSOs
-    navigate("/super-admin");
-    // if not then, print on the screen that they are not qualified yet
-  };
   return (
     <div className="container">
-      <div className="tabs">
-        <div className="tab" onClick={handleUniInfoClick}>
-          University Information
-        </div>
-        <div className="tab" onClick={handleEventInfoClick}>
-          Event Information
-        </div>
-        <div className="tab" onClick={handleCreateRSOClick}>
-          Create an RSO
-        </div>
-        <div className="tab" onClick={handleHostEventClick}>
-          Host Event
-        </div>
-        <div className="tab" onClick={handleSeeProfile}>
-          See Your Profile
-        </div>
-        <div className="tab" onClick={handleSeeSuperAdminRoles}>
-          Super Admin Resources
-        </div>
-      </div>
+      <div className="box">
       <h1>Welcome to the Create RSO Page!</h1>
 
-    </div>
+      {/* Add RSO creation form */}
+      <form onSubmit={handleFormSubmit}>
+        <label>
+          RSO ID:
+          <input
+            type="text"
+            value={rsoID}
+            onChange={(event) => setRSOID(event.target.value)}
+          />
+        </label>
+        <label>
+          RSO Name:
+          <input
+            type="text"
+            value={rsoName}
+            onChange={(event) => setRSOName(event.target.value)}
+          />
+        </label>
+        <label>
+          RSO Description:
+          <textarea
+            value={rsoDescription}
+            onChange={(event) => setRSODescription(event.target.value)}
+          />
+        </label>
+        <button type="submit">Create RSO</button>
+      </form>
+      </div>
+      {/* show list of public events */}
+      {/* show list of RSO events */}
       
-      //show list of public events
-      //show list of RSO events
+      <button onClick={handleBackClick}>Back</button>
+    </div>
   );
 };
 
