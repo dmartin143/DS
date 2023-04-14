@@ -1,27 +1,31 @@
 import React from "react";
 import "./eventstatusbox.css";
 
-const EventStatusBox = ({ event, onApprove, onDisapprove }) => {
-  const {
-    name,
-    category,
-    description,
-    time,
-    date,
-    location,
-    latitude,
-    longitude,
-    phone,
-    email,
-    status
-  } = event;
+const EventStatusBox = () => {
+//   const {
+//     name,
+//     category,
+//     description,
+//     time,
+//     date,
+//     location,
+//     latitude,
+//     longitude,
+//     phone,
+//     email,
+//     status
+//   } = event;
 
-  const handleApprove = () => {
-    onApprove(event);
-  };
+//   const handleApprove = () => {
+//     onApprove(event);
+//   };
 
-  const handleDisapprove = () => {
-    onDisapprove(event);
+//   const handleDisapprove = () => {
+//     onDisapprove(event);
+//   };
+
+  const handleBackClick = () => {
+    window.history.back();
   };
 
   return (
@@ -61,11 +65,12 @@ const EventStatusBox = ({ event, onApprove, onDisapprove }) => {
         <p>
           <strong>Status:</strong> {status}
         </p> */}
-        <div className="buttons">
+        {/* <div className="buttons">
           <button onClick={handleApprove}>Approve</button>
           <button onClick={handleDisapprove}>Disapprove</button>
-        </div>
+        </div> */}
       </div>
+      <button onClick={handleBackClick}>Back</button>
     </div>
   );
 };

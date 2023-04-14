@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom';
 import logo from './logo.svg';
 import './App.css';
-import HomeBox from './Components/Home/HomeBox';
+// import HomeBox from './src/Components/Home/HomeBox';
 import LoginBox from './Components/Login/LoginBox';
 import RegisterBox from './Components/Register/RegisterBox';
 import AdminBox from './Components/Admin-Home/AdminBox';
