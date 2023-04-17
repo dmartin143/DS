@@ -1,5 +1,64 @@
 import * as mysql2 from 'mysql2';
 
+export async function joinRSO(pool, userID, RSOID) {
+    const connection = await connectDB(pool);
+    if (!connection)
+        return null;
+
+    const RSOExists = await isValidRSO(pool, RSOID);
+    const userExists = await userAlreadyExists(pool, userID);
+
+    const relation = {
+        userID: userID,
+        RSOID: RSOID
+    };
+
+    if (RSOExists != true || userExists != true)
+        return false;
+
+    try {
+        const res = connection.query(
+            `INSERT INTO RSOMembers SET ?`, relation
+        );
+
+        return true;
+    }
+    catch (err) {
+        console.log(err);
+        return null;
+    }
+    finally {
+        connection.release();
+    }
+}
+
+async function isValidRSO(pool, RSOID) {
+    const connection = await connectDB(pool);
+    if (!connection)
+        return null;
+
+    try {
+        const res = connection.query(
+            `SELECT *\
+            FROM RSOs as R\
+            WHERE R.RSOID = ${RSOID};`
+        )
+
+        if (res.length < 1)
+            return true;
+        else
+            return false;
+    }
+    catch (err) {
+        console.log(err);
+        return null;
+    }
+    finally {
+        connection.release();
+    }
+    
+}
+
 export async function addUser(pool, username, password) {
     if (username === null || password === null)
         return null;
