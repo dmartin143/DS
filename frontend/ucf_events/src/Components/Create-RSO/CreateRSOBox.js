@@ -39,6 +39,7 @@ const CreateRSOBox = () => {
             onChange={(event) => setRSOID(event.target.value)}
           />
         </label>
+        <br/>
         <label>
           RSO Name:
           <input
@@ -47,6 +48,7 @@ const CreateRSOBox = () => {
             onChange={(event) => setRSOName(event.target.value)}
           />
         </label>
+        <br/>
         <label>
           RSO Description:
           <textarea
@@ -54,6 +56,7 @@ const CreateRSOBox = () => {
             onChange={(event) => setRSODescription(event.target.value)}
           />
         </label>
+        <br/>
         <button type="submit">Create RSO</button>
       </form>
       </div>

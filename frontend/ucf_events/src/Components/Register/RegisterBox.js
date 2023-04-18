@@ -9,9 +9,10 @@ import { useNavigate } from "react-router-dom";
 // import AdminBox from "../Admin-Home";
 // import StudentBox from "../Student-Home";
 
-import ucfLogo from '../../Images/ucf_logo.PNG'
+import ucfLogo from '../../Images/ucf_logo.PNG';
+import {headers, route} from "../../requestUtils.js";
 
-const RegisterBox = ({ handleRegister }) => {
+const RegisterBox = ({ handleRegister, callback }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -62,13 +63,62 @@ const RegisterBox = ({ handleRegister }) => {
   };
 
   const handleSubmit = (event) => {
-      if(userType === "student"){
-        window.location.href = "/Student";
+    event.preventDefault();
+    
+    const newUser = {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      username: username,
+      password: password,
+      userType: userType,
+      account1: account1,
+      account2: account2
+    };
+  
+    let options = {
+      method: 'PUT',
+      headers: headers(),
+      body: newUser
+    }
+    fetch(route + 'update_needs_training', options)
+    .then((response) => {
+      if (response.status === 401) {
+        callback({
+          success: false,
+          message: 'User not Authorized'
+        });
+      } else if (response.status === 200){
+        callback({
+          success:true
+        });
+        handleRegister(newUser);
+        if (userType === "student") {
+          navigate("/Student");
+          console.log('navigating to student page');
+        } else if (userType === "admin") {
+          navigate("/Admin");
+        }
+      } else {
+        response.json().then((response) => {
+          callback({
+            success: false,
+            message: response.message
+          });
+        })
       }
-      else if (userType === "admin"){
-        window.location.href = "/Admin";
-      }
+    })
+    .catch(error => {
+      callback({
+        success: false,
+      })
+      console.log('handleSubmit error:', error);
+
+    });
+    console.log('handleSubmit called');
+
   };
+  
 
   return (
     <div className="container">
