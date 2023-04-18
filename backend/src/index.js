@@ -1,4 +1,4 @@
-import {initializeTables, addUser, isValidUser, joinRSO, createRSO, createGroup, joinGroup} from './DBManager.js';
+import {initializeTables, addUser, isValidUser, joinRSO, createRSO, createGroup, joinGroup, addSuperAdmin, addUniversity} from './DBManager.js';
 import configDB from './configDB.json' assert { type: 'json' };
 import express from 'express';
 import * as mysql from 'mysql2';
@@ -12,6 +12,23 @@ await initializeTables(pool);
 
 app.get('/', (req, res) => {
     res.send('Test')
+})
+
+app.post('/create_university', async (req, res) => {
+    const emailSuffix = req.emailSuffix;
+    const description = req.description;
+    const numStudents = req.numStudents;
+    const name = req.name;
+    const locationID = req.locationID;
+    const isSuperAdmin = req.isSuperAdmin;
+
+    const addedUniversity = addUniversity(pool, emailSuffix, description, numStudents, name, locationID, isSuperAdmin);
+    if (addUniversity == null)
+        res.status(500).send("Could not create university.");
+    else if (addUniversity == false)
+        res.status(500).send("University with selected email suffix already exists.");
+    else
+        res.status(200).send("University successfully created.");
 })
 
 app.post('/join_group', async (req, res) => {
@@ -86,16 +103,26 @@ app.get('/login', async (req, res) => {
 app.post('/register', async (req, res) => {
     const username = req.username;
     const password = req.password;
+    const emailSuffix = req.emailSuffix;
+    const isSuperAdmin = req.isSuperAdmin;
 
-    const registrationSuccess = await addUser(pool, username, password);
-    if (registrationSuccess === null) {
+    const registrationSuccess = await addUser(pool, username, password, emailSuffix);
+    if (registrationSuccess === null) 
         res.status(500).send('Error occured during registration.');
-    }
-    else if (registrationSuccess === false) {
+    else if (registrationSuccess === false) 
         res.status(409).send("Username is taken.");
-    }
-    else if (registrationSuccess === true) {
-        res.status(200).send("User was successfully registered.")
+    
+    if (!isSuperAdmin)
+        res.status(200).send("User was successfully registered.");
+
+    else {
+        const addedSuperAdmin = await addSuperAdmin(pool, username);
+        if (addSuperAdmin === null) 
+            res.status(500).send('Error occured during registration.');
+        else if (addSuperAdmin === false)
+            res.status(500).send("User is already a SuperAdmin.");
+        else
+            res.status(200).send('User successfully added as a SuperAdmin.');
     }
 })
 

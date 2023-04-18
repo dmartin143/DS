@@ -1,18 +1,123 @@
 import * as mysql2 from 'mysql2';
 
+export async function addUniversity(pool, emailSuffix, description, numStudents, name, locationID, isSuperAdmin) {
+    if (!isSuperAdmin)
+        return false;
+
+    const universityExists = await universityAlreadyExists(pool, emailSuffix);
+    if (universityExists == null)
+        return null;
+    else if (universityExists)
+        return false;
+
+    const connection = await connectDB(pool);
+    if (!connection)
+        return null;
+
+    try {
+        const res = connection.query(
+            `INSERT INTO Universities(emailSuffix, description, numStudents, name, locationID) \
+            VALUES (${emailSuffix}, ${description}, ${numStudents}, ${name}, ${locationID})`
+        );
+
+        return true;
+    }
+    catch (err) {
+        console.log(err);
+        return null;
+    }
+    finally {
+        connection.release();
+    }
+}
+
+async function universityAlreadyExists(pool, emailSuffix) {
+    const connection = await connectDB(pool);
+    if (!connection)
+        return null;
+
+    try {
+        const res = connection.query(
+            `SELECT COUNT(*)\
+            FROM Universities as Uni\
+            WHERE Uni.emailSuffix = ${emailSuffix};`
+        );
+        if (res == 0)
+            return false;
+        else
+            return true;
+    }
+    catch (err) {
+        console.log(err);
+        return null;
+    }
+    finally {
+        connection.release();
+    }
+}
+
+export async function addSuperAdmin(pool, userID) {
+    const isAlreadySuperAdmin = await superAdminAlreadyExists(pool, userID);
+    if (isAlreadySuperAdmin == null)
+        return null;
+    else if (isAlreadySuperAdmin)
+        return false;
+
+    const connection = await connectDB(pool);
+    if (!connection)
+        return null;
+
+    try {
+        const res = connection.query(
+            `INSERT INTO SuperAdmins(userID) \
+            VALUES (${userID})`
+        );
+
+        return true;
+    }
+    catch (err) {
+        console.log(err);
+        return null;
+    }
+    finally {
+        connection.release();
+    }
+}
+
+async function superAdminAlreadyExists(pool, userID) {
+    const connection = await connectDB(pool);
+    if (!connection)
+        return null;
+
+    try {
+        const res = connection.query(
+            `SELECT COUNT(*)\
+            FROM SuperAdmins as SA\
+            WHERE SA.userID = ${userID};`
+        );
+        if (res == 0)
+            return false;
+        else
+            return true;
+    }
+    catch (err) {
+        console.log(err);
+        return null;
+    }
+    finally {
+        connection.release();
+    }
+}
+
 export async function joinGroup(pool, userID, groupID) {
     const connection = await connectDB(pool);
     if (!connection)
         return null;
 
-    const relation = {
-        userID: userID,
-        groupID: groupID
-    };
-
     try {
         const res = connection.query(
-            `INSERT INTO GroupMembers SET ?`, relation
+            `INSERT INTO GroupMembers(userID, groupID) \
+            VALUES (${userID}, ${groupID})`
         );
 
         return true;
@@ -37,14 +142,10 @@ export async function createGroup(pool, userID, groupName) {
     else if (groupExists)
         return false;
 
-    const group = {
-        leader: userID,
-        groupName: groupName
-    };
- 
     try {
         const res = connection.query(
-            `INSERT INTO Groups SET ?`, group
+            `INSERT INTO Groups(leader, groupName) \
+            VALUES (${userID}, ${groupName})`
         );
 
         return true;
@@ -100,7 +201,8 @@ export async function addAdmin(pool, userID) {
  
     try {
         const res = connection.query(
-            `INSERT INTO RSOs SET ?`, admin
+            `INSERT INTO RSOs(userID) \
+            VALUES (${userID})`
         );
 
         return true;
@@ -212,13 +314,9 @@ export async function createRSO(pool, userID, RSOName, groupID) {
             return null;
         const adminID = adminRes[0].adminID;
 
-        const RSO = {
-            adminID: adminID,
-            name: RSOName
-        };
-
         const res = connection.query(
-            `INSERT INTO RSOs SET ?`, RSO
+            `INSERT INTO RSOs(adminID, name) \
+            VALUES (${adminID}, ${RSOName})`
         );
         
         return true;
@@ -238,14 +336,10 @@ export async function joinRSO(pool, userID, RSOID) {
     if (!connection)
         return null;
 
-    const relation = {
-        userID: userID,
-        RSOID: RSOID
-    };
-
     try {
         const res = connection.query(
-            `INSERT INTO RSOMembers SET ?`, relation
+            `INSERT INTO RSOMembers(userID, RSOID) \
+            VALUES (${userID}, ${RSOID})`
         );
 
         return true;
@@ -286,7 +380,7 @@ async function isValidRSO(pool, RSOName) {
     
 }
 
-export async function addUser(pool, username, password) {
+export async function addUser(pool, username, password, emailSuffix) {
     if (username === null || password === null)
         return null;
 
@@ -298,7 +392,8 @@ export async function addUser(pool, username, password) {
 
     const newUser = {
         userID: username,
-        password
+        password: password,
+        emailSuffix: emailSuffix
     };
 
     const connection = await connectDB(pool);
@@ -307,7 +402,8 @@ export async function addUser(pool, username, password) {
 
     try {
         connection.query(
-            'INSERT INTO Users SET ?', newUser
+            `INSERT INTO Users(userID, password, emailSuffix) \
+            VALUES (${username}, ${password}, ${emailSuffix})`
         );
         return true;
     }
