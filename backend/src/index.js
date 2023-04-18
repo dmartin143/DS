@@ -1,4 +1,4 @@
-import {initializeTables, addUser, isValidUser, joinRSO, createRSO} from './DBManager.js';
+import {initializeTables, addUser, isValidUser, joinRSO, createRSO, createGroup, joinGroup} from './DBManager.js';
 import configDB from './configDB.json' assert { type: 'json' };
 import express from 'express';
 import * as mysql from 'mysql2';
@@ -14,11 +14,39 @@ app.get('/', (req, res) => {
     res.send('Test')
 })
 
-app.post('/create_RSO', async (req, res) => {
-    const adminID = req.adminID;
-    const RSOName = req.RSOName;
+app.post('/join_group', async (req, res) => {
+    const userID = req.userID;
+    const groupID = req.groupID;
 
-    const createdRSO = await createRSO(pool, adminID, RSOName);
+    const joinedGroup = await joinGroup(pool, userID, groupID);
+
+    if (joinedRSO != true)
+        res.status(500).send('Could not add user to selected RSO.');
+    else {
+        res.status(200).send('User successfully added to RSO.');
+    }
+})
+
+app.post('/create_group', async (req, res) => {
+    const userID = req.userID;
+    const groupName = req.groupName;
+
+    const createdGroup = await createGroup(pool, userID, groupName);
+
+    if (createGroup == null)
+        res.status(500).send("Could not create group.");
+    else if (createGroup == false)
+        res.status(500).send("Group with selected name already exists.");
+    else
+        res.status(200).send("Group successfully created.");
+})
+
+app.post('/create_RSO', async (req, res) => {
+    const userID = req.userID;
+    const RSOName = req.RSOName;
+    const groupID = req.groupID;
+
+    const createdRSO = await createRSO(pool, userID, RSOName, groupID);
 
     if (createRSO != true)
         res.status(500).send('Could not create RSO.');
@@ -26,11 +54,11 @@ app.post('/create_RSO', async (req, res) => {
         res.status(200).send('RSO successfully created.');
 })
 
-app.post('/join_group', async (req, res) => {
+app.post('/join_RSO', async (req, res) => {
     const userID = req.userID;
-    const RSOName = req.RSOName;
+    const RSOID = req.RSOID;
 
-    const joinedRSO = await joinRSO(pool, userID, RSOName);
+    const joinedRSO = await joinRSO(pool, userID, RSOID);
 
     if (joinedRSO != true)
         res.status(500).send('Could not add user to selected RSO.');

@@ -1,6 +1,177 @@
 import * as mysql2 from 'mysql2';
 
-export async function createRSO(pool, adminID, RSOName) {
+export async function joinGroup(pool, userID, groupID) {
+    const connection = await connectDB(pool);
+    if (!connection)
+        return null;
+
+    const relation = {
+        userID: userID,
+        groupID: groupID
+    };
+
+    try {
+        const res = connection.query(
+            `INSERT INTO GroupMembers SET ?`, relation
+        );
+
+        return true;
+    }
+    catch (err) {
+        console.log(err);
+        return null;
+    }
+    finally {
+        connection.release();
+    }
+}
+
+export async function createGroup(pool, userID, groupName) {
+    const connection = await connectDB(pool);
+    if (!connection)
+        return null;
+    
+    const groupExists = await groupAlreadyExists(pool, groupName);
+    if (groupExists == null)
+        return null;
+    else if (groupExists)
+        return false;
+
+    const group = {
+        leader: userID,
+        groupName: groupName
+    };
+ 
+    try {
+        const res = connection.query(
+            `INSERT INTO Groups SET ?`, group
+        );
+
+        return true;
+    }
+    catch (err) {
+        console.log(err);
+        return null;
+    }
+    finally {
+        connection.release();
+    }
+}
+
+async function groupAlreadyExists(pool, groupName) {
+    const connection = await connectDB(pool);
+    if (!connection)
+        return null;
+
+    try {
+        const res = connection.query(
+            `SELECT COUNT(*)\
+            FROM Groups as G\
+            WHERE G.groupName LIKE ${groupName};`
+        );
+        if (res == 0)
+            return false;
+        else
+            return true;
+    }
+    catch (err) {
+        console.log(err);
+        return null;
+    }
+    finally {
+        connection.release();
+    }
+}
+
+export async function addAdmin(pool, userID) {
+    const connection = await connectDB(pool);
+    if (!connection)
+        return null;
+    
+    const isAlreadyAdmin = await adminAlreadyExists(pool, userID);
+    if (isAlreadyAdmin == null)
+        return null;
+    else if (isAlreadyAdmin)
+        return false;
+
+    const admin = {
+        userID: userID
+    };
+ 
+    try {
+        const res = connection.query(
+            `INSERT INTO RSOs SET ?`, admin
+        );
+
+        return true;
+    }
+    catch (err) {
+        console.log(err);
+        return null;
+    }
+    finally {
+        connection.release();
+    }
+}
+
+async function adminAlreadyExists(pool, userID) {
+    const connection = await connectDB(pool);
+    if (!connection)
+        return null;
+
+    try {
+        const res = connection.query(
+            `SELECT COUNT(*)\
+            FROM Admins as A\
+            WHERE A.userID = ${userID};`
+        );
+        if (res == 0)
+            return false;
+        else
+            return true;
+    }
+    catch (err) {
+        console.log(err);
+        return null;
+    }
+    finally {
+        connection.release();
+    }
+}
+
+async function groupEmailCount(pool, groupID) {
+    const connection = await connectDB(pool);
+    if (!connection)
+        return null;
+
+    try {
+        const res = connection.query(
+            `SELECT U.emailSuffix\
+            FROM Users as U GroupMembers as GM\
+            WHERE GM.groupID = ${groupID} AND GM.userID = U.userID;`
+        )
+
+        let uniqueEmails = {};
+        res.forEach(email => {
+            if (email in uniqueEmails)
+                uniqueEmails.email++;
+            else
+                uniqueEmails.email = 1;
+        });
+
+        let emailCounts = Object.values(uniqueEmails);
+        return Math.min(...emailCounts);
+    }
+    catch (err) {
+        console.log(err);
+        return null;
+    }
+    finally {
+        connection.release();
+    }
+}
+
+export async function createRSO(pool, userID, RSOName, groupID) {
     const RSOAlreadyExists = await isValidRSO(pool, RSOName);
     if (RSOAlreadyExists == true)
         return false;
@@ -11,12 +182,41 @@ export async function createRSO(pool, adminID, RSOName) {
     if (!connection)
         return null;
 
-    const RSO = {
-        adminID: adminID,
-        name: RSOName
-    };
-
     try {
+        const leaderRes = connection.query(
+            `SELECT G.leader\
+            FROM Groups as G\
+            WHERE G.groupID = ${groupID}`
+        );
+        if (leaderRes.length != 1)
+            return null;
+        const isLeader = leaderRes[0].leader == userID;
+        if (!isLeader)
+            return false;
+
+        const emailCount = await groupEmailCount(pool, groupID);
+        if (emailCount == null)
+            return null;
+        if (emailCount < 5)
+            return false;
+
+        const adminAdded = await addAdmin(pool, userID);
+        if (adminAdded == null)
+            return null;
+        const adminRes = connection.query(
+            `SELECT A.adminID\
+            FROM Admins as A\
+            WHERE A.userID = ${userID};`
+        );
+        if (adminRes.length != 1)
+            return null;
+        const adminID = adminRes[0].adminID;
+
+        const RSO = {
+            adminID: adminID,
+            name: RSOName
+        };
+
         const res = connection.query(
             `INSERT INTO RSOs SET ?`, RSO
         );
@@ -38,16 +238,10 @@ export async function joinRSO(pool, userID, RSOID) {
     if (!connection)
         return null;
 
-    const RSOExists = await isValidRSO(pool, RSOName);
-    const userExists = await userAlreadyExists(pool, userID);
-
     const relation = {
         userID: userID,
-        RSOName: RSOName
+        RSOID: RSOID
     };
-
-    if (RSOExists != true || userExists != true)
-        return false;
 
     try {
         const res = connection.query(
@@ -193,7 +387,11 @@ async function userAlreadyExists(pool, username) {
 export async function initializeTables(pool) {
     const tableSuccesses = [];
 
+    tableSuccesses.push(await createUniversitiesTable(pool));
+    tableSuccesses.push(await createImagesTable(pool));
     tableSuccesses.push(await createUsersTable(pool));
+    tableSuccesses.push(await createGroupsTable(pool));
+    tableSuccesses.push(await createGroupMembersTable(pool));
     tableSuccesses.push(await createAdminsTable(pool));
     tableSuccesses.push(await createSuperAdminsTable(pool));
     tableSuccesses.push(await createLocationsTable(pool));
@@ -215,6 +413,62 @@ export async function initializeTables(pool) {
     return true;
 }
 
+async function createUniversitiesTable(pool) {
+    const connection = await connectDB(pool);
+    if (!connection)
+        return false;
+
+    try {
+        const res = connection.query(
+            'CREATE TABLE IF NOT EXISTS Universities(\
+            emailSuffix VARCHAR(30),\
+            description VARCHAR(200),\
+            numStudents INTEGER,\
+            name VARCHAR(50) NOT NULL,\
+            locationID INTEGER,\
+            PRIMARY KEY (emailSuffix),\
+            FOREIGN KEY (locationID) REFERENCES Locations(locationID));'
+        );
+        console.log(`Universities table created -> ${res}`);
+    }
+    catch(err) {
+        console.log('Issue creting Universities table.');
+        return false;
+    }
+    finally {
+        connection.release();
+    }
+
+    return true;
+}
+
+async function createImagesTable(pool) {
+    const connection = await connectDB(pool);
+    if (!connection)
+        return false;
+
+    try {
+        const res = connection.query(
+            'CREATE TABLE IF NOT EXISTS Images(\
+            imageID INTEGER,\
+            image LONGBLOB NOT NULL,\
+            emailSuffix VARCHAR(30) NOT NULL,\
+            PRIMARY KEY (imageID),\
+            FOREIGN KEY (emailSuffix) REFERENCES Universities(emailSuffix));'
+        );
+        console.log(`Images table created -> ${res}`);
+    }
+    catch(err) {
+        console.log('Issue creting Images table.');
+        return false;
+    }
+    finally {
+        connection.release();
+    }
+
+    return true;
+}
+
 async function createUsersTable(pool) {
     const connection = await connectDB(pool);
     if (!connection)
@@ -225,12 +479,68 @@ async function createUsersTable(pool) {
             'CREATE TABLE IF NOT EXISTS Users(\
             userID VARCHAR(30),\
             password VARCHAR(30),\
-            PRIMARY KEY (userID));'
+            emailSuffix VARCHAR(30),\
+            PRIMARY KEY (userID),\
+            FOREIGN KEY (emailSuffix) REFERENCES Universities(emailSuffix));'
         );
         console.log(`Users table created -> ${res}`);
     }
     catch(err) {
         console.log('Issue creting Users table.');
+        return false;
+    }
+    finally {
+        connection.release();
+    }
+
+    return true;
+}
+
+async function createGroupsTable(pool) {
+    const connection = await connectDB(pool);
+    if (!connection)
+        return false;
+
+    try {
+        const res = connection.query(
+            'CREATE TABLE IF NOT EXISTS Groups(\
+            groupID INTEGER AUTO_INCREMENT,\
+            leader INTEGER NOT NULL,\
+            groupName VARCHAR(50),\
+            PRIMARY KEY (groupID),\
+            FOREIGN KEY (leader) REFERENCES Users(userID));'
+        );
+        console.log(`Groups table created -> ${res}`);
+    }
+    catch(err) {
+        console.log('Issue creting Groups table.');
+        return false;
+    }
+    finally {
+        connection.release();
+    }
+
+    return true;
+}
+
+async function createGroupMembersTable(pool) {
+    const connection = await connectDB(pool);
+    if (!connection)
+        return false;
+
+    try {
+        const res = connection.query(
+            'CREATE TABLE IF NOT EXISTS GroupMembers(\
+            userID INTEGER,\
+            groupID INTEGER,\
+            PRIMARY KEY (userID, groupID),\
+            FOREIGN KEY (userID) REFERENCES Users(userID),\
+            FOREIGN KEY (groupID) REFERENCES Groups(groupID));'
+        );
+        console.log(`GroupMembers table created -> ${res}`);
+    }
+    catch(err) {
+        console.log('Issue creting GroupMembers table.');
         return false;
     }
     finally {
@@ -396,7 +706,7 @@ async function createRSOsTable(pool) {
         const res = connection.query(
             'CREATE TABLE IF NOT EXISTS RSOs(\
             RSOID INT AUTO_INCREMENT,\
-            name VARCHAR(50),\
+            name VARCHAR(50) NOT NULL,\
             adminID INT NOT NULL,\
             PRIMARY KEY (RSOID),\
             FOREIGN KEY (adminID) REFERENCES Admins(adminID));'
