@@ -1,16 +1,49 @@
 import * as mysql2 from 'mysql2';
 
+export async function createRSO(pool, adminID, RSOName) {
+    const RSOAlreadyExists = await isValidRSO(pool, RSOName);
+    if (RSOAlreadyExists == true)
+        return false;
+    else if (RSOAlreadyExists == null)
+        return null;
+    
+    const connection = await connectDB(pool);
+    if (!connection)
+        return null;
+
+    const RSO = {
+        adminID: adminID,
+        name: RSOName
+    };
+
+    try {
+        const res = connection.query(
+            `INSERT INTO RSOs SET ?`, RSO
+        );
+        
+        return true;
+    }
+    catch (err) {
+        console.log(err);
+        return null;
+    }
+    finally {
+        connection.release();
+    }
+
+}
+
 export async function joinRSO(pool, userID, RSOID) {
     const connection = await connectDB(pool);
     if (!connection)
         return null;
 
-    const RSOExists = await isValidRSO(pool, RSOID);
+    const RSOExists = await isValidRSO(pool, RSOName);
     const userExists = await userAlreadyExists(pool, userID);
 
     const relation = {
         userID: userID,
-        RSOID: RSOID
+        RSOName: RSOName
     };
 
     if (RSOExists != true || userExists != true)
@@ -32,7 +65,7 @@ export async function joinRSO(pool, userID, RSOID) {
     }
 }
 
-async function isValidRSO(pool, RSOID) {
+async function isValidRSO(pool, RSOName) {
     const connection = await connectDB(pool);
     if (!connection)
         return null;
@@ -41,7 +74,7 @@ async function isValidRSO(pool, RSOID) {
         const res = connection.query(
             `SELECT *\
             FROM RSOs as R\
-            WHERE R.RSOID = ${RSOID};`
+            WHERE R.name = ${RSOName};`
         )
 
         if (res.length < 1)
@@ -363,6 +396,7 @@ async function createRSOsTable(pool) {
         const res = connection.query(
             'CREATE TABLE IF NOT EXISTS RSOs(\
             RSOID INT AUTO_INCREMENT,\
+            name VARCHAR(50),\
             adminID INT NOT NULL,\
             PRIMARY KEY (RSOID),\
             FOREIGN KEY (adminID) REFERENCES Admins(adminID));'
