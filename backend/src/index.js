@@ -1,4 +1,4 @@
-import {initializeTables, addUser, isValidUser, joinRSO, createRSO, createGroup, joinGroup, addSuperAdmin, addUniversity} from './DBManager.js';
+import {initializeTables, addUser, isValidUser, joinRSO, createRSO, createGroup, joinGroup, addSuperAdmin, addUniversity, addRSOEvent, addPrivateEvent, addPublicEvent} from './DBManager.js';
 import configDB from './configDB.json' assert { type: 'json' };
 import express from 'express';
 import * as mysql from 'mysql2';
@@ -9,9 +9,62 @@ const port = 3000;
 const pool = mysql.createPool(configDB);
 
 await initializeTables(pool);
+// Use this line to get time for MySQL
+// new Date().toISOString().slice(0, 19).replace('T', ' ');
 
 app.get('/', (req, res) => {
     res.send('Test')
+})
+
+app.post('/add_PublicEvent', async (req, res) => {
+    const time = req.time;
+    const description = req.description;
+    const streetAddress = req.streetAddress;
+    const city = req.city;
+    const state = req.state;
+    const userID = req.userID;
+
+    const addedEvent = await addPublicEvent(pool, time, description, streetAddress, city, state, userID);
+    if (addedEvent == null)
+        res.status(500).send('Could not create event');
+    else if (addedEvent == false)
+        res.status(500).send('Event already exists at given place and time');
+    else
+        res.status(200).send('Public event created successfully.');
+})
+
+app.post('/add_PrivateEvent', async (req, res) => {
+    const time = req.time;
+    const description = req.description;
+    const streetAddress = req.streetAddress;
+    const city = req.city;
+    const state = req.state;
+    const userID = req.userID;
+
+    const addedEvent = await addPrivateEvent(pool, time, description, streetAddress, city, state, userID);
+    if (addedEvent == null)
+        res.status(500).send('Could not create event');
+    else if (addedEvent == false)
+        res.status(500).send('Event already exists at given place and time');
+    else
+        res.status(200).send('Private event created successfully.');
+})
+
+app.post('/add_RSOEvent', async (req, res) => {
+    const time = req.time;
+    const description = req.description;
+    const streetAddress = req.streetAddress;
+    const city = req.city;
+    const state = req.state;
+    const RSOID = req.RSOID;
+
+    const addedEvent = await addRSOEvent(pool, time, description, streetAddress, city, state, RSOID);
+    if (addedEvent == null)
+        res.status(500).send('Could not create event');
+    else if (addedEvent == false)
+        res.status(500).send('Event already exists at given place and time');
+    else
+        res.status(200).send('RSO event created successfully.');
 })
 
 app.post('/create_university', async (req, res) => {

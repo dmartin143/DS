@@ -1,5 +1,302 @@
 import * as mysql2 from 'mysql2';
 
+async function getAdminID(pool, userID) {
+    const connection = await connectDB(pool);
+    if (!connection)
+        return null;
+
+    try {
+        const res = connection.query(
+            `SELECT A.adminID\
+            FROM Admins as A\
+            WHERE A.userID = ${userID}`
+        );
+        if (res.length == 0)
+            return null;
+
+        return res[0].adminID;
+    }
+    catch (err) {
+        console.log(err);
+        return null;
+    }
+    finally {
+        connection.release();
+    }
+}
+
+export async function addPublicEvent(pool, time, description, streetAddress, city, state, userID) {
+    const locationID = await addLocation(pool, streetAddress, city, state, null, null);
+    if (locationID = null)
+        return null;
+    const adminID = await getAdminID(pool, userID);
+    if (adminID == null)
+        return null;
+    
+    const eventAdded = await addEvent(pool, time, description, streetAddress, city, state);
+    if (eventAdded == null)
+        return null;
+    if (eventAdded == false)
+        return false;
+    const eventID = await findEventID(pool, time, locationID);
+
+    const connection = await connectDB(pool);
+    if (!connection)
+        return null;
+
+    try {
+        const res = connection.query(
+            `INSERT INTO PublicEvents(eventID, adminID, superAdminID, isAllowed)\
+            VALUES (${eventID}, ${adminID}, ${null}, ${null})`
+        );
+
+        return true;
+    }
+    catch (err) {
+        console.log(err);
+        return null;
+    }
+    finally {
+        connection.release();
+    }
+}
+
+export async function addPrivateEvent(pool, time, description, streetAddress, city, state, userID) {
+    const locationID = await addLocation(pool, streetAddress, city, state, null, null);
+    if (locationID = null)
+        return null;
+    const adminID = await getAdminID(pool, userID);
+    if (adminID == null)
+        return null;
+    
+    const eventAdded = await addEvent(pool, time, description, streetAddress, city, state);
+    if (eventAdded == null)
+        return null;
+    if (eventAdded == false)
+        return false;
+    const eventID = await findEventID(pool, time, locationID);
+
+    const connection = await connectDB(pool);
+    if (!connection)
+        return null;
+
+    try {
+        const res = connection.query(
+            `INSERT INTO PrivateEvents(eventID, adminID, superAdminID, isAllowed)\
+            VALUES (${eventID}, ${adminID}, ${null}, ${null})`
+        );
+
+        return true;
+    }
+    catch (err) {
+        console.log(err);
+        return null;
+    }
+    finally {
+        connection.release();
+    }
+}
+
+export async function addRSOEvent(pool, time, description, streetAddress, city, state, RSOID) {
+    const locationID = await addLocation(pool, streetAddress, city, state, null, null);
+    if (locationID = null)
+        return null;
+    
+    const eventAdded = await addEvent(pool, time, description, streetAddress, city, state);
+    if (eventAdded == null)
+        return null;
+    if (eventAdded == false)
+        return false;
+    const eventID = await findEventID(pool, time, locationID);
+
+    const connection = await connectDB(pool);
+    if (!connection)
+        return null;
+
+    try {
+        const res = connection.query(
+            `INSERT INTO RSOEvents(eventID, RSOID)\
+            VALUES (${eventID}, ${RSOID})`
+        );
+
+        return true;
+    }
+    catch (err) {
+        console.log(err);
+        return null;
+    }
+    finally {
+        connection.release();
+    }
+}
+
+async function findEventID(pool, time, locationID) {
+    const connection = await connectDB(pool);
+    if (!connection)
+        return null;
+
+    try {
+        const res = connection.query(
+            `SELECT E.eventID\
+            FROM Events as E\
+            WHERE E.time = ${time} AND E.locationID = ${locationID}`
+        );
+
+        if (res.length == 0)
+            return null;
+        else
+            return res[0].eventID;
+    }
+    catch (err) {
+        console.log(err);
+        return null;
+    }
+    finally {
+        connection.release();
+    }
+}
+
+async function addLocation(pool, streetAddress, city, state, latitude, longitude) {
+    const locationAlreadyExists = await locationExists(pool, streetAddress, city, state);
+    if (locationAlreadyExists == null)
+        return null;
+    if (locationAlreadyExists)
+        return false;
+
+    const connection = await connectDB(pool);
+    if (!connection)
+        return null;
+    
+    try {
+        const res = connection.query(
+            `INSERT INTO Locations(streetAddress, city, state, latitude, longitude)\
+            VALUES (${streetAddress}, ${city}, ${state}, ${latitude}, ${longitude})`
+        );
+
+        return true;
+    }
+    catch (err) {
+        console.log(err);
+        return null;
+    }
+    finally {
+        connection.release();
+    }
+}
+
+async function locationExists(pool, streetAddress, city, state) {
+    const connection = await connectDB(pool);
+    if (!connection)
+        return null;
+
+    try {
+        const res = connection.query(
+            `SELECT COUNT(*)\
+            FROM Locations AS L\
+            WHERE L.streetAddress like ${streetAddress} AND L.city like ${city}\
+            AND L.state like ${state}`
+        );
+
+        if (res.length == 0)
+            return false;
+        else
+            return true;
+    }
+    catch (err) {
+        console.log(err);
+        return null;
+    }
+    finally {
+        connection.release();
+    }
+}
+
+async function getLocationID(pool, streetAddress, city, state) {
+    const connection = await connectDB(pool);
+    if (!connection)
+        return null;
+
+    try {
+        const res = connection.query(
+            `SELECT L.locationID\
+            FROM Locations AS L\
+            WHERE L.streetAddress like ${streetAddress} AND L.city like ${city}\
+            AND L.state like ${state}`
+        );
+
+        if (res.length == 0)
+            return null;
+        else
+            return res[0].locationID;
+    }
+    catch (err) {
+        console.log(err);
+        return null;
+    }
+    finally {
+        connection.release();
+    }
+}
+
+export async function addEvent(pool, time, description, streetAddress, city, state) {
+    const slotNotFree = await otherEventSameLocationAndTime(pool, time, locationID);
+    if (slotNotFree == null)
+        return null;
+    if (slotNotFree)
+        return false;
+
+    const ensureValidLocation = await addLocation(pool, streetAddress, city, state);
+    if (ensureValidLocation == null)
+        return null;
+    const locationID = await getLocationID(pool, streetAddress, city, state);
+
+    const connection = await connectDB(pool);
+    if (!connection)
+        return null;
+
+    try {
+        const res = connection.query(
+            `INSERT INTO Events(time, description, locationID)\
+            VALUES (${time}, ${description}, ${locationID})`
+        );
+
+        return true;
+    }
+    catch (err) {
+        console.log(err);
+        return null;
+    }
+    finally {
+        connection.release();
+    }
+}
+
+async function otherEventSameLocationAndTime(pool, time, locationID) {
+    const connection = await connectDB(pool);
+    if (!connection)
+        return null;
+
+    try {
+        const res = connection.query(
+            `SELECT COUNT(*)\
+            FROM Events AS E\
+            WHERE E.time = ${time} AND E.locationID = ${locationID}`
+        );
+
+        if (res.length == 0)
+            return false;
+        else
+            return true;
+    }
+    catch (err) {
+        console.log(err);
+        return null;
+    }
+    finally {
+        connection.release();
+    }
+}
+
 export async function addUniversity(pool, emailSuffix, description, numStudents, name, locationID, isSuperAdmin) {
     if (!isSuperAdmin)
         return false;
