@@ -3,7 +3,17 @@
 
 ## Running the Application
 
-Make sure you have Nodejs installed on your device.
+Make sure you have Nodejs and MySQL installed on your device.
+
+Make sure to add a file to the directory "backend/src" named configDB.json.
+Inside this file you must have a JSON containing MySQL setup info as follows
+{
+    "host": "TBD",
+    "user": "TBD",
+    "password": "TBD",
+    "database": "TBD",
+    "connectionLimit": TBD
+}
 
 Steps to prepare the application:
 
