@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./registerbox.css";
 import { useNavigate } from "react-router-dom";
 // import {
@@ -22,8 +22,10 @@ const RegisterBox = ({ handleRegister, callback }) => {
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [account1, setAccount1] = useState('');
   const [account2, setAccount2] = useState('');
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {}, [username, password, passwordConfirm, account1, account2, userType, email, lastName, firstName]);
 
   const handleFirstNameChange = (event) => {
     setFirstName(event.target.value);
@@ -64,54 +66,52 @@ const RegisterBox = ({ handleRegister, callback }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    const emailParts = email.split('@');
+    if (emailParts.length != 2) {
+      setError('Invalid email');
+      return;
+    }
+    const emailSuffix = emailParts[1];
+    const isAdmin = (userType == 'Admin') ? true : false;
     
     const newUser = {
       firstName: firstName,
       lastName: lastName,
       email: email,
+      emailSuffix: emailSuffix,
       username: username,
       password: password,
       userType: userType,
+      isSuperAdmin: isAdmin,
       account1: account1,
       account2: account2
     };
   
     let options = {
-      method: 'PUT',
+      method: 'POST',
       headers: headers(),
-      body: newUser
+      body: JSON.stringify(newUser)
     }
-    fetch(route + 'update_needs_training', options)
+    fetch(route + '/register', options)
     .then((response) => {
-      if (response.status === 401) {
-        callback({
-          success: false,
-          message: 'User not Authorized'
-        });
+      if (response.status === 409) {
+        setError('Username is taken');
       } else if (response.status === 200){
-        callback({
-          success:true
-        });
-        handleRegister(newUser);
         if (userType === "student") {
           navigate("/Student");
           console.log('navigating to student page');
-        } else if (userType === "admin") {
+        } else if (userType === "Admin") {
           navigate("/Admin");
+          console.log('navigating to student page');
         }
       } else {
         response.json().then((response) => {
-          callback({
-            success: false,
-            message: response.message
-          });
+          setError(response.message);
         })
       }
     })
     .catch(error => {
-      callback({
-        success: false,
-      })
+      setError('An issue occured with registration');
       console.log('handleSubmit error:', error);
 
     });
@@ -122,13 +122,13 @@ const RegisterBox = ({ handleRegister, callback }) => {
 
   return (
     <div className="container">
-      <div class="row">
-        <div class="column">
+      <div className="row">
+        <div className="column">
           <div className="register-page-logo">
             <img src={ucfLogo} alt="Logo" />
           </div>
         </div>
-      <div class="column">
+      <div className="column">
         <div className="register-page-form">
           <div className="register-page-form-header">
             <h2>Register</h2>
@@ -241,6 +241,7 @@ const RegisterBox = ({ handleRegister, callback }) => {
                   required
                 />
                 <br />
+                {error && <div className="error">{error}</div>}
                 <button onClick={handleSubmit}>Submit</button>
               <br />
             </div>

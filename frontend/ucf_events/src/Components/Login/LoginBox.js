@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./loginbox.css"; // import the CSS file
 import ucfLogo from '../../Images/ucf_logo.PNG';
-import {userType} from "../Register/RegisterBox";
+import { headers, route } from '../../requestUtils.js'
 
 
 
@@ -11,6 +11,7 @@ const LoginBox = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  useEffect(() => {}, [username, password]);
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -25,17 +26,40 @@ const LoginBox = () => {
   }
 
   const handleLogin = () => {
-    const userType = window.sessionStorage.getItem("userType");
-    if(userType === "student"){
-      navigate("/StudentBox");
-    }
-    else if (userType === "admin"){
-      navigate("/AdminBox");
-    }
-    else {
-      setError("Invalid Log In");
-    }
+    const user = {
+      username,
+      password
+    };
 
+    let options = {
+      method: 'POST',
+      headers: headers(),
+      body: JSON.stringify(user)
+    }
+    fetch(route + '/login', options)
+    .then((response) => {
+      if (response.status === 409) {
+        setError('Incorrect username or password');
+      } else if (response.status === 200){
+        //if (userType === "student") {
+          navigate("/Student");
+          console.log('navigating to student page');
+        // } else if (userType === "Admin") {
+        //   navigate("/Admin");
+        //   console.log('navigating to student page');
+        // }
+      } else {
+        response.json().then((response) => {
+          setError(response.message);
+        })
+      }
+    })
+    .catch(error => {
+      setError('An issue occured when logging in');
+      console.log('handleLogin error:', error);
+
+    });
+    console.log('handleLogin called');
   };
 
   const handleRegister = () => {
@@ -43,15 +67,15 @@ const LoginBox = () => {
   };
 
   return (
-    <div class="container">
-  <div class="row">
-    <div class="column">
-      <div class="logo">
+    <div className="container">
+  <div className="row">
+    <div className="column">
+      <div className="logo">
         <img src={ucfLogo} alt="Logo" />
       </div>
     </div>
-    <div class="column">
-      <div class="login-box">
+    <div className="column">
+      <div className="login-box">
         <h2>Login</h2>
         <label htmlFor="username">Username:</label>
         <input
@@ -60,6 +84,7 @@ const LoginBox = () => {
           name="username"
           value={username}
           onChange={handleUsernameChange}
+          required
         />
         <br />
         <label htmlFor="password">Password:</label>
@@ -69,6 +94,7 @@ const LoginBox = () => {
           name="password"
           value={password}
           onChange={handlePasswordChange}
+          required
         />
         <br />
         <button onClick={handleLogin}>Submit</button>

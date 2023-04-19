@@ -9,7 +9,7 @@ async function getAdminID(pool, userID) {
         const res = connection.query(
             `SELECT A.adminID\
             FROM Admins as A\
-            WHERE A.userID = ${userID}`
+            WHERE A.userID = '${userID}'`
         );
         if (res.length == 0)
             return null;
@@ -170,7 +170,7 @@ async function addLocation(pool, streetAddress, city, state, latitude, longitude
     try {
         const res = connection.query(
             `INSERT INTO Locations(streetAddress, city, state, latitude, longitude)\
-            VALUES (${streetAddress}, ${city}, ${state}, ${latitude}, ${longitude})`
+            VALUES ('${streetAddress}', '${city}', '${state}', ${latitude}, ${longitude})`
         );
 
         return true;
@@ -193,8 +193,8 @@ async function locationExists(pool, streetAddress, city, state) {
         const res = connection.query(
             `SELECT COUNT(*)\
             FROM Locations AS L\
-            WHERE L.streetAddress like ${streetAddress} AND L.city like ${city}\
-            AND L.state like ${state}`
+            WHERE L.streetAddress like '${streetAddress}' AND L.city like '${city}'\
+            AND L.state like '${state}'`
         );
 
         if (res.length == 0)
@@ -220,8 +220,8 @@ async function getLocationID(pool, streetAddress, city, state) {
         const res = connection.query(
             `SELECT L.locationID\
             FROM Locations AS L\
-            WHERE L.streetAddress like ${streetAddress} AND L.city like ${city}\
-            AND L.state like ${state}`
+            WHERE L.streetAddress like '${streetAddress}' AND L.city like '${city}'\
+            AND L.state like '${state}'`
         );
 
         if (res.length == 0)
@@ -257,7 +257,7 @@ export async function addEvent(pool, time, description, streetAddress, city, sta
     try {
         const res = connection.query(
             `INSERT INTO Events(time, description, locationID)\
-            VALUES (${time}, ${description}, ${locationID})`
+            VALUES (${time}, '${description}', ${locationID})`
         );
 
         return true;
@@ -314,7 +314,7 @@ export async function addUniversity(pool, emailSuffix, description, numStudents,
     try {
         const res = connection.query(
             `INSERT INTO Universities(emailSuffix, description, numStudents, name, locationID) \
-            VALUES (${emailSuffix}, ${description}, ${numStudents}, ${name}, ${locationID})`
+            VALUES ('${emailSuffix}', '${description}', ${numStudents}, '${name}', ${locationID})`
         );
 
         return true;
@@ -337,7 +337,7 @@ async function universityAlreadyExists(pool, emailSuffix) {
         const res = connection.query(
             `SELECT COUNT(*)\
             FROM Universities as Uni\
-            WHERE Uni.emailSuffix = ${emailSuffix};`
+            WHERE Uni.emailSuffix = '${emailSuffix}';`
         );
         if (res == 0)
             return false;
@@ -367,7 +367,7 @@ export async function addSuperAdmin(pool, userID) {
     try {
         const res = connection.query(
             `INSERT INTO SuperAdmins(userID) \
-            VALUES (${userID})`
+            VALUES ('${userID}')`
         );
 
         return true;
@@ -390,7 +390,7 @@ async function superAdminAlreadyExists(pool, userID) {
         const res = connection.query(
             `SELECT COUNT(*)\
             FROM SuperAdmins as SA\
-            WHERE SA.userID = ${userID};`
+            WHERE SA.userID = '${userID}';`
         );
         if (res == 0)
             return false;
@@ -414,7 +414,7 @@ export async function joinGroup(pool, userID, groupID) {
     try {
         const res = connection.query(
             `INSERT INTO GroupMembers(userID, groupID) \
-            VALUES (${userID}, ${groupID})`
+            VALUES ('${userID}', ${groupID})`
         );
 
         return true;
@@ -442,7 +442,7 @@ export async function createGroup(pool, userID, groupName) {
     try {
         const res = connection.query(
             `INSERT INTO Groups(leader, groupName) \
-            VALUES (${userID}, ${groupName})`
+            VALUES ('${userID}', '${groupName}')`
         );
 
         return true;
@@ -465,7 +465,7 @@ async function groupAlreadyExists(pool, groupName) {
         const res = connection.query(
             `SELECT COUNT(*)\
             FROM Groups as G\
-            WHERE G.groupName LIKE ${groupName};`
+            WHERE G.groupName LIKE '${groupName}';`
         );
         if (res == 0)
             return false;
@@ -499,7 +499,7 @@ export async function addAdmin(pool, userID) {
     try {
         const res = connection.query(
             `INSERT INTO RSOs(userID) \
-            VALUES (${userID})`
+            VALUES ('${userID}')`
         );
 
         return true;
@@ -522,7 +522,7 @@ async function adminAlreadyExists(pool, userID) {
         const res = connection.query(
             `SELECT COUNT(*)\
             FROM Admins as A\
-            WHERE A.userID = ${userID};`
+            WHERE A.userID = '${userID}';`
         );
         if (res == 0)
             return false;
@@ -547,7 +547,7 @@ async function groupEmailCount(pool, groupID) {
         const res = connection.query(
             `SELECT U.emailSuffix\
             FROM Users as U GroupMembers as GM\
-            WHERE GM.groupID = ${groupID} AND GM.userID = U.userID;`
+            WHERE GM.groupID = ${groupID} AND GM.userID like U.userID;`
         )
 
         let uniqueEmails = {};
@@ -605,7 +605,7 @@ export async function createRSO(pool, userID, RSOName, groupID) {
         const adminRes = connection.query(
             `SELECT A.adminID\
             FROM Admins as A\
-            WHERE A.userID = ${userID};`
+            WHERE A.userID LIKE '${userID}';`
         );
         if (adminRes.length != 1)
             return null;
@@ -613,7 +613,7 @@ export async function createRSO(pool, userID, RSOName, groupID) {
 
         const res = connection.query(
             `INSERT INTO RSOs(adminID, name) \
-            VALUES (${adminID}, ${RSOName})`
+            VALUES (${adminID}, '${RSOName}')`
         );
         
         return true;
@@ -636,7 +636,7 @@ export async function joinRSO(pool, userID, RSOID) {
     try {
         const res = connection.query(
             `INSERT INTO RSOMembers(userID, RSOID) \
-            VALUES (${userID}, ${RSOID})`
+            VALUES ('${userID}', ${RSOID})`
         );
 
         return true;
@@ -659,7 +659,7 @@ async function isValidRSO(pool, RSOName) {
         const res = connection.query(
             `SELECT *\
             FROM RSOs as R\
-            WHERE R.name = ${RSOName};`
+            WHERE R.name LIKE '${RSOName}';`
         )
 
         if (res.length < 1)
@@ -684,24 +684,21 @@ export async function addUser(pool, username, password, emailSuffix) {
     let userExists = await userAlreadyExists(pool, username);
     if (userExists === null)
         return null;
-    else if (userExists === false)
+    else if (userExists === true)
         return false;
-
-    const newUser = {
-        userID: username,
-        password: password,
-        emailSuffix: emailSuffix
-    };
 
     const connection = await connectDB(pool);
     if (!connection)
         return null;
 
     try {
-        connection.query(
+        const res = connection.query(
             `INSERT INTO Users(userID, password, emailSuffix) \
-            VALUES (${username}, ${password}, ${emailSuffix})`
-        );
+            VALUES ('${username}', '${password}', '${emailSuffix}')`
+        )
+        if (res.affectedRows == 0)
+            return false;
+
         return true;
     }
     catch (err) {
@@ -727,7 +724,7 @@ export async function isValidUser(pool, username, password) {
         const res = connection.query(
             `SELECT userID\
             FROM Users AS U\
-            WHERE U.userID LIKE ${username} AND U.password LIKE ${password};`
+            WHERE U.userID LIKE '${username}' AND U.password LIKE '${password}';`
         );
 
         if (res.length === 0) 
@@ -751,7 +748,7 @@ async function userAlreadyExists(pool, username) {
 
     let exists = null;
 
-    const connection = await pool.connectDB(pool);
+    const connection = await connectDB(pool);
     if (!connection)
         return null;
     
@@ -759,9 +756,11 @@ async function userAlreadyExists(pool, username) {
         const res = connection.query(
             `SELECT userID\
             FROM Users as U
-            WHERE U.userID LIKE ${username};`
+            WHERE U.userID LIKE '${username}';`
         );
-
+        
+        if (res == null)
+            return null;
         if (res.length > 0)
             exists = true;
         else
@@ -780,6 +779,7 @@ async function userAlreadyExists(pool, username) {
 export async function initializeTables(pool) {
     const tableSuccesses = [];
 
+    tableSuccesses.push(await createLocationsTable(pool));
     tableSuccesses.push(await createUniversitiesTable(pool));
     tableSuccesses.push(await createImagesTable(pool));
     tableSuccesses.push(await createUsersTable(pool));
@@ -787,7 +787,6 @@ export async function initializeTables(pool) {
     tableSuccesses.push(await createGroupMembersTable(pool));
     tableSuccesses.push(await createAdminsTable(pool));
     tableSuccesses.push(await createSuperAdminsTable(pool));
-    tableSuccesses.push(await createLocationsTable(pool));
     tableSuccesses.push(await createEventsTable(pool));
     tableSuccesses.push(await createCommentsTable(pool));
     tableSuccesses.push(await createRSOsTable(pool));
@@ -896,9 +895,9 @@ async function createGroupsTable(pool) {
 
     try {
         const res = connection.query(
-            'CREATE TABLE IF NOT EXISTS Groups(\
+            'CREATE TABLE IF NOT EXISTS `Groups`(\
             groupID INTEGER AUTO_INCREMENT,\
-            leader INTEGER NOT NULL,\
+            leader VARCHAR(30) NOT NULL,\
             groupName VARCHAR(50),\
             PRIMARY KEY (groupID),\
             FOREIGN KEY (leader) REFERENCES Users(userID));'
@@ -924,11 +923,11 @@ async function createGroupMembersTable(pool) {
     try {
         const res = connection.query(
             'CREATE TABLE IF NOT EXISTS GroupMembers(\
-            userID INTEGER,\
+            userID VARCHAR(30),\
             groupID INTEGER,\
             PRIMARY KEY (userID, groupID),\
             FOREIGN KEY (userID) REFERENCES Users(userID),\
-            FOREIGN KEY (groupID) REFERENCES Groups(groupID));'
+            FOREIGN KEY (groupID) REFERENCES `Groups`(groupID));'
         );
         console.log(`GroupMembers table created -> ${res}`);
     }
@@ -952,7 +951,7 @@ async function createAdminsTable(pool) {
             const res = connection.query(
                 'CREATE TABLE IF NOT EXISTS Admins(\
                 userID VARCHAR(30) NOT NULL,\
-                adminID INT,\
+                adminID INT AUTO_INCREMENT,\
                 PRIMARY KEY (adminID),\
                 FOREIGN KEY (userID) REFERENCES Users(userID)\
                     ON UPDATE CASCADE\
@@ -980,7 +979,7 @@ async function createSuperAdminsTable(pool) {
         const res = connection.query(
             'CREATE TABLE IF NOT EXISTS SuperAdmins(\
             userID VARCHAR(30) NOT NULL,\
-            superAdminID INT,\
+            superAdminID INT AUTO_INCREMENT,\
             PRIMARY KEY (superAdminID),\
             FOREIGN KEY (userID) REFERENCES Users(userID)\
                 ON UPDATE CASCADE\
