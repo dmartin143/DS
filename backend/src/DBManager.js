@@ -722,7 +722,7 @@ export async function isValidUser(pool, username, password) {
 
     try {
         const res = connection.query(
-            `SELECT userID\
+            `SELECT U.userID\
             FROM Users AS U\
             WHERE U.userID LIKE '${username}' AND U.password LIKE '${password}';`
         );
